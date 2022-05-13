@@ -1,7 +1,15 @@
+import copy
+import os
 from typing import Text, Optional, List
+from collections import defaultdict
 
-from src.common import TrainerModelConfig, TrainingData
+from src.common import (
+    TrainerModelConfig, TrainingData,
+    logger, get_tsp, create_dir, module_path_from_object
+)
 from src.nlp import Persistor, ComponentBuilder, Component
+from src.engine.constants import DEFAULT_PROJECT_NAME
+from src.engine.storage import Metadata
 
 
 class Trainer(object):
@@ -22,8 +30,36 @@ class Trainer(object):
         self.skip_validation = skip_validation
         self.training_data = None
 
+        if component_builder is None:
+            component_builder = ComponentBuilder()
+
+        # if not self.skip_validation:
+        #     validate_requirements(cfg.component_names)
+        self.pipeline = self._build_pipeline(cfg, component_builder)
+
     def train(self, data: TrainingData, **kwargs):
-        pass
+        """
+        1, Trains the pipeline using the provided training data.
+        2, checking all the input parameter (empty pipeline, pre layer component)
+        3, every component run training model
+        """
+        self.training_data = data # domain.yml
+        context = kwargs
+
+        for component in self.pipeline:
+            updates = component.provide_context()
+            updates and context.update(updates)
+
+        # if not self.skip_validation:
+        #     validate_arguments(self.pipeline, context)
+
+        working_data = copy.deepcopy(data)
+        for i, component in enumerate(self.pipeline):
+            logger.info(f"Starting to train component {component.name}")
+            component.prepare_partial_processing(self.pipeline[:i], context)
+            updates = component.train(working_data, self.config, **context)
+            logger.info("Finished training component.")
+            updates and context.update(updates)
 
     @staticmethod
     def _build_pipeline(cfg: TrainerModelConfig,
@@ -38,6 +74,39 @@ class Trainer(object):
     def persist(self,
                 path: Text,
                 persistor: Optional[Persistor] = None,
-                project_name: Text = None,
+                project_name: Text = DEFAULT_PROJECT_NAME,
                 fixed_model_name: Text = None) -> Text:
-        pass
+        """
+        Persist all components of the pipeline to the passed path.
+        1, generate storage path
+        2, create dir
+        3, write metadata to the json file
+        """
+        metadata = defaultdict()
+        metadata["language"] = self.config["language"]
+
+        model_name = fixed_model_name if fixed_model_name else f'model_{get_tsp()}'
+        path = self.config.make_path_absolute(path)
+        dir_name = os.path.join(path, project_name, model_name)
+        create_dir(dir_name)
+
+        self.training_data and metadata.update(self.training_data.persist(dir_name))
+
+        metadata["pipeline"] = []
+        for component in self.pipeline:
+            update = component.persist(dir_name)
+            component_meta = component.component_config
+            update and component_meta.update(update)
+            component_meta["class"] = module_path_from_object(component)
+            metadata["pipeline"].append(component_meta)
+
+        Metadata(metadata, dir_name).persist(dir_name)
+
+        if persistor is not None:
+            persistor.persist(dir_name, model_name, project_name)
+        logger.info(f'Successfully saved model into {os.path.abspath(dir_name)}')
+        return dir_name
+
+
+class Interpreter(object):
+    pass

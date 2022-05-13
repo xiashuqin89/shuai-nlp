@@ -1,0 +1,1 @@
+DEFAULT_PROJECT_NAME = 'default'

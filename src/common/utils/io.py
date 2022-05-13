@@ -1,7 +1,9 @@
 import io
 import os
+import json
+import errno
 from functools import wraps
-from typing import Text, List
+from typing import Text, List, Any
 
 import yaml
 
@@ -35,3 +37,28 @@ def read_file(filename, encoding="utf-8"):
 
 def list_files(path: Text) -> List[Text]:
     pass
+
+
+def json_to_string(obj: Any, **kwargs):
+    indent = kwargs.pop("indent", 2)
+    ensure_ascii = kwargs.pop("ensure_ascii", False)
+    return json.dumps(obj, indent=indent, ensure_ascii=ensure_ascii, **kwargs)
+
+
+def write_json_to_file(filename: Text, obj: Any, **kwargs):
+    write_to_file(filename, json_to_string(obj, **kwargs))
+
+
+def write_to_file(filename: Text, text: Text):
+    with io.open(filename, 'w', encoding="utf-8") as f:
+        f.write(str(text))
+
+
+def create_dir(dir_path: Text):
+    """Creates a directory and its super paths.
+    Succeeds even if the path already exists."""
+    try:
+        os.makedirs(dir_path)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
