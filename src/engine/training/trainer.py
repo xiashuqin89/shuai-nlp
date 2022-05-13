@@ -5,11 +5,11 @@ from collections import defaultdict
 
 from src.common import (
     TrainerModelConfig, TrainingData,
-    logger, get_tsp, create_dir, module_path_from_object
+    logger, get_tsp, create_dir, module_path_from_object, make_path_absolute
 )
-from src.nlp import Persistor, ComponentBuilder, Component
+from src.nlp import Persistor, ComponentBuilder, Metadata
 from src.engine.constants import DEFAULT_PROJECT_NAME
-from src.engine.storage import Metadata
+from src.engine import Menu
 
 
 class Trainer(object):
@@ -68,7 +68,7 @@ class Trainer(object):
                         component_builder: ComponentBuilder) -> List:
         """Transform the passed names of the pipeline components into classes"""
         pipeline = [
-            component_builder.create_component(component_name, cfg)
+            component_builder.create_component(component_name, cfg, Menu())
             for component_name in cfg.component_names
         ]
         return pipeline
@@ -83,12 +83,13 @@ class Trainer(object):
         1, generate storage path
         2, create dir
         3, write metadata to the json file
+        todo mv save flow to storage module
         """
         metadata = defaultdict()
         metadata["language"] = self.config["language"]
 
         model_name = fixed_model_name if fixed_model_name else f'model_{get_tsp()}'
-        path = self.config.make_path_absolute(path)
+        path = make_path_absolute(path)
         dir_name = os.path.join(path, project_name, model_name)
         create_dir(dir_name)
 

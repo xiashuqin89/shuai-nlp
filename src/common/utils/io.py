@@ -72,3 +72,11 @@ def create_dir(dir_path: Text):
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+
+
+def make_path_absolute(path: Text) -> Text:
+    if path and not os.path.isabs(path):
+        return os.path.join(os.getcwd(), path)
+    else:
+        return path
+

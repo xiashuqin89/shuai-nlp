@@ -1,10 +1,19 @@
 """
 loading config
 """
+from typing import Dict
+
 from src.common.constants import DEFAULT_CONFIG
 from src.common.utils.stdlib import json_to_string, override_defaults
 from src.common.log import logger
 from src.common.exceptions import InvalidConfigError
+
+
+def override_defaults(defaults: Dict, custom: Dict) -> Dict:
+    cfg = defaults or {}
+    if custom:
+        cfg.update(custom)
+    return cfg
 
 
 class TrainerModelConfig(object):
