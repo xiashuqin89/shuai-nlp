@@ -1,6 +1,6 @@
 import copy
 import os
-from typing import Text, Optional, List
+from typing import Text, Optional, List, Dict, Any
 from collections import defaultdict
 
 from src.common import (
@@ -37,7 +37,7 @@ class Trainer(object):
         #     validate_requirements(cfg.component_names)
         self.pipeline = self._build_pipeline(cfg, component_builder)
 
-    def train(self, data: TrainingData, **kwargs):
+    def train(self, data: TrainingData, **kwargs) -> Dict[Text, Any]:
         """
         1, Trains the pipeline using the provided training data.
         2, checking all the input parameter (empty pipeline, pre layer component)
@@ -60,6 +60,8 @@ class Trainer(object):
             updates = component.train(working_data, self.config, **context)
             logger.info("Finished training component.")
             updates and context.update(updates)
+
+        return context
 
     @staticmethod
     def _build_pipeline(cfg: TrainerModelConfig,
@@ -106,7 +108,3 @@ class Trainer(object):
             persistor.persist(dir_name, model_name, project_name)
         logger.info(f'Successfully saved model into {os.path.abspath(dir_name)}')
         return dir_name
-
-
-class Interpreter(object):
-    pass

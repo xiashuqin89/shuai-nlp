@@ -6,6 +6,7 @@ from functools import wraps
 from typing import Text, List, Any
 
 import yaml
+import simplejson
 
 
 def fix_yaml_loader(func):
@@ -43,6 +44,15 @@ def json_to_string(obj: Any, **kwargs):
     indent = kwargs.pop("indent", 2)
     ensure_ascii = kwargs.pop("ensure_ascii", False)
     return json.dumps(obj, indent=indent, ensure_ascii=ensure_ascii, **kwargs)
+
+
+def read_json_file(filename):
+    """Read json from a file."""
+    content = read_file(filename)
+    try:
+        return simplejson.loads(content)
+    except ValueError as e:
+        raise ValueError(f'Failed to read json from "{os.path.abspath(filename)}". Error: {e}')
 
 
 def write_json_to_file(filename: Text, obj: Any, **kwargs):
