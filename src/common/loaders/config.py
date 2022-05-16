@@ -21,7 +21,6 @@ class TrainerModelConfig(object):
     transfer user's yaml or json config
     to python object
     """
-    DEFAULT_PROJECT_NAME = "default"
 
     def __init__(self, configuration_values=None):
 
@@ -42,14 +41,8 @@ class TrainerModelConfig(object):
         #         # replaces the template with the actual components
         #         self.__dict__['pipeline'] = pipeline
         #     else:
-        #         known_templates = ", ".join(
-        #                 registry.registered_pipeline_templates.keys())
         #
-        #         raise InvalidConfigError("No pipeline specified and unknown "
-        #                                  "pipeline template '{}' passed. Known "
-        #                                  "pipeline templates: {}"
-        #                                  "".format(template_name,
-        #                                            known_templates))
+        #         raise InvalidConfigError("No pipeline specified and unknown ")
 
         for key, value in self.items():
             setattr(self, key, value)

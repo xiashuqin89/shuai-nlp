@@ -23,3 +23,14 @@ def get_tsp(fmt: Text = '%Y-%m-%d %H:%M:%S') -> Text:
 def module_path_from_object(o):
     """Returns the fully qualified class path of the instantiated object."""
     return o.__class__.__module__ + "." + o.__class__.__name__
+
+
+def class_from_module_path(module_path):
+    """Catch AttributeError and ImportError"""
+    import importlib
+    if "." in module_path:
+        module_name, _, class_name = module_path.rpartition('.')
+        m = importlib.import_module(module_name)
+        return getattr(m, class_name)
+    else:
+        return globals()[module_path]

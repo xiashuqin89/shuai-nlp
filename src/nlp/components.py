@@ -1,4 +1,6 @@
-from typing import Text, List, Dict, Optional, Any, Tuple
+from typing import (
+    Text, List, Dict, Optional, Any, Tuple, Hashable
+)
 
 from src.common import (
     TrainerModelConfig, TrainingData,
@@ -6,7 +8,7 @@ from src.common import (
     MissingArgumentError,
 )
 from src.nlp.meta import Metadata
-from src.engine import Menu
+from src.common import Message
 
 
 class Component(object):
@@ -24,6 +26,30 @@ class Component(object):
         self.partial_processing_pipeline = None
         self.partial_processing_context = None
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
+    def __getstate__(self):
+        d = self.__dict__.copy()
+        if "partial_processing_context" in d:
+            del d["partial_processing_context"]
+        if "partial_processing_pipeline" in d:
+            del d["partial_processing_pipeline"]
+        return d
+
+    @classmethod
+    def load(cls,
+             model_dir: Optional[Text] = None,
+             model_metadata: Optional[Metadata] = None,
+             cached_component: Optional['Component'] = None,
+             **kwargs
+             ) -> 'Component':
+        if cached_component:
+            return cached_component
+        else:
+            component_config = model_metadata.for_component(cls.name)
+            return cls(component_config)
+
     @classmethod
     def required_packages(cls) -> List[Text]:
         return []
@@ -35,6 +61,10 @@ class Component(object):
         self.partial_processing_pipeline = pipeline
         self.partial_processing_context = context
 
+    @classmethod
+    def create(cls, cfg: TrainerModelConfig):
+        pass
+
     def train(self, training_data: TrainingData, cfg: TrainerModelConfig, **kwargs):
         """Train this component.
         This is the components chance to train itself provided
@@ -45,9 +75,23 @@ class Component(object):
         of components previous to this one."""
         pass
 
+    def process(self, message: Message, **kwargs):
+        pass
+
     def persist(self, model_dir: Text) -> Optional[Dict[Text, Any]]:
         """Persist this component to disk for future loading."""
         pass
+
+    @classmethod
+    def cache_key(cls, model_metadata: Metadata) -> Optional[Text]:
+        return None
+
+    @classmethod
+    def can_handle_language(cls, language: Hashable) -> bool:
+        """if language_list is set to `None` it means: support all languages"""
+        if language is None or cls.language_list is None:
+            return True
+        return language in cls.language_list
 
 
 class ComponentBuilder(object):
@@ -69,7 +113,7 @@ class ComponentBuilder(object):
     def _get_from_cache(self,
                         component_name: Text,
                         model_metadata: Metadata,
-                        menu: Menu) -> Tuple[Optional[Component], Optional[Text]]:
+                        menu: Optional) -> Tuple[Optional[Component], Optional[Text]]:
 
         component_class = menu.get_component_class(component_name)
         cache_key = component_class.cache_key(model_metadata)
@@ -81,7 +125,7 @@ class ComponentBuilder(object):
                        component_name: Text,
                        model_dir: Text,
                        model_metadata: Metadata,
-                       menu: Menu,
+                       menu: Optional,
                        **context) -> Component:
         """Tries to retrieve a component from the cache, calls
         `load` to create a new component."""
@@ -102,7 +146,7 @@ class ComponentBuilder(object):
     def create_component(self,
                          component_name: Text,
                          cfg: TrainerModelConfig,
-                         menu: Menu) -> Component:
+                         menu: Optional) -> Component:
         try:
             component, cache_key = self._get_from_cache(
                 component_name, Metadata(cfg.as_dict(), None))
