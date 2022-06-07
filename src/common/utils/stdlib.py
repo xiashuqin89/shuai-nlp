@@ -34,3 +34,12 @@ def class_from_module_path(module_path):
         return getattr(m, class_name)
     else:
         return globals()[module_path]
+
+
+def ordered(obj):
+    if isinstance(obj, dict):
+        return sorted((k, ordered(v)) for k, v in obj.items())
+    if isinstance(obj, list):
+        return sorted(ordered(x) for x in obj)
+    else:
+        return obj

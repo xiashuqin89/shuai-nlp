@@ -17,7 +17,8 @@ class InvalidRecipeException(Exception):
 class Menu(object):
     """
     Use all the native component register
-    todo should be replace by decorator
+    This class like a db, native component all from this
+    todo should be replace by decorator & class name maybe update
     """
     _registered_components: Dict[Text, Optional[Type[Component]]] = {c.name: c for c in COMPONENT_CLASSES}
 

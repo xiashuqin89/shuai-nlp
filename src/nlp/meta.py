@@ -31,6 +31,13 @@ class Metadata(object):
         return self.metadata.get(property_name, default)
 
     @property
+    def component_classes(self):
+        if self.get('pipeline'):
+            return [c.get("class") for c in self.get('pipeline', [])]
+        else:
+            return []
+
+    @property
     def language(self) -> Optional[Text]:
         """Language of the underlying model"""
         return self.get('language')
