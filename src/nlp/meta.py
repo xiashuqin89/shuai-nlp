@@ -3,6 +3,7 @@ import datetime
 from collections import defaultdict
 
 from typing import Dict, Text, Any, Optional
+from src.version import __version__
 from src.common import (
     write_json_to_file, read_json_file, logger,
     InvalidProjectError
@@ -40,7 +41,7 @@ class Metadata(object):
         metadata = self.metadata.copy()
         metadata.update({
             "trained_at": datetime.datetime.now().strftime('%Y%m%d-%H%M%S'),
-            "version": '',
+            "version": __version__,
         })
 
         filename = os.path.join(model_dir, 'metadata.json')
