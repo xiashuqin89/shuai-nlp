@@ -5,7 +5,7 @@ from collections import defaultdict
 from typing import Dict, Text, Any, Optional
 from src.version import __version__
 from src.common import (
-    write_json_to_file, read_json_file, logger,
+    write_json_to_file, read_json_file, logger, override_defaults,
     InvalidProjectError
 )
 
@@ -41,6 +41,13 @@ class Metadata(object):
     def language(self) -> Optional[Text]:
         """Language of the underlying model"""
         return self.get('language')
+
+    def for_component(self, name, defaults=None):
+        for c in self.get('pipeline', []):
+            if c.get("name") == name:
+                return override_defaults(defaults, c)
+        else:
+            return defaults or {}
 
     def persist(self, model_dir: Text):
         """Persists the metadata of a model to a given directory."""

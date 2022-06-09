@@ -13,7 +13,10 @@ class TrainingData(object):
                  training_examples: Optional[List[Message]] = None,
                  entity_synonyms: Optional[Dict[Text, Text]] = None,
                  regex_features: List = None):
-        pass
+        if training_examples:
+            self.training_examples = self.sanitize_examples(training_examples)
+        else:
+            self.training_examples = []
 
     def as_json(self, **kwargs) -> Text:
         return DefaultWriter().dumps(self)
@@ -25,3 +28,12 @@ class TrainingData(object):
         return {
             "training_data": "training_data.json"
         }
+
+    @staticmethod
+    def sanitize_examples(examples: List[Message]) -> List[Message]:
+        """Makes sure the training data is clean.
+        removes trailing whitespaces from intent annotations."""
+        for ex in examples:
+            if ex.get("intent"):
+                ex.set("intent", ex.get("intent").strip())
+        return examples
