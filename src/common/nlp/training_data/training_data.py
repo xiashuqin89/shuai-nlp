@@ -17,6 +17,11 @@ class TrainingData(object):
             self.training_examples = self.sanitize_examples(training_examples)
         else:
             self.training_examples = []
+        self.regex_features = regex_features if regex_features else []
+        self.entity_synonyms = entity_synonyms if entity_synonyms else {}
+        # self.sort_regex_features()
+        # self.validate()
+        # self.print_stats()
 
     def as_json(self, **kwargs) -> Text:
         return DefaultWriter().dumps(self)
