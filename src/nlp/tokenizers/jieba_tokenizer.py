@@ -8,14 +8,15 @@ from src.nlp.components import Component
 from src.common import TrainerModelConfig
 from src.nlp.meta import Metadata
 from src.nlp.constants import (
-    TOKENS, DEFAULT_DICT_FILE_NAME, USER_DICTS_FOLDER_NAME,
+    TOKENS, TOKENIZER_JIEPA,
+    DEFAULT_DICT_FILE_NAME, USER_DICTS_FOLDER_NAME,
     USER_DICT_FILE_NAME
 )
 from .tokenizer import Tokenizer, Token
 
 
 class JiebaTokenizer(Tokenizer, Component):
-    name = "tokenizer_jieba"
+    name = TOKENIZER_JIEPA
     provides = [TOKENS]
     language_list = ["zh"]
 

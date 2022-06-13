@@ -34,6 +34,11 @@ class TrainingData(object):
             "training_data": "training_data.json"
         }
 
+    @property
+    def intent_examples(self) -> List[Message]:
+        return [ex for ex in self.training_examples
+                if ex.get("intent")]
+
     @staticmethod
     def sanitize_examples(examples: List[Message]) -> List[Message]:
         """Makes sure the training data is clean.

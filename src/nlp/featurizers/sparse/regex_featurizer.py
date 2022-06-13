@@ -9,12 +9,15 @@ from src.common import (
 )
 from src.nlp.components import Component
 from src.nlp.meta import Metadata
-from src.nlp.constants import TOKENS, TEXT_FEATURES, REGEX_FEATURIZER_FILE_NAME
+from src.nlp.constants import (
+    TOKENS, TEXT_FEATURES, FEATURIZER_REGEX,
+    REGEX_FEATURIZER_FILE_NAME
+)
 from ..featurizer import Featurizer
 
 
 class RegexFeaturizer(Featurizer, Component):
-    name = "intent_entity_featurizer_regex"
+    name = FEATURIZER_REGEX
     provides = [TEXT_FEATURES]
     requires = [TOKENS]
 

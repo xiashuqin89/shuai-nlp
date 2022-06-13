@@ -1,12 +1,12 @@
 from typing import Text, List
 
 from src.nlp.components import Component
-from src.nlp.constants import TOKENS
+from src.nlp.constants import TOKENS, TOKENIZER_WHITESPACE
 from .tokenizer import Tokenizer, Token
 
 
 class WhitespaceTokenizer(Tokenizer, Component):
-    name = "tokenizer_whitespace"
+    name = TOKENIZER_WHITESPACE
 
     provides = [TOKENS]
 
