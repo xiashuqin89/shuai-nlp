@@ -1,11 +1,13 @@
+import os
 import re
-from typing import Dict, Text, Any, List
+from typing import Dict, Text, Any, List, Optional
 
 import sklearn
 
 from src.common import (
     Message, TrainingData, TrainerModelConfig,
-    read_json_file, write_json_to_file, logger
+    read_json_file, write_json_to_file, logger,
+    py_cloud_unpickle, py_cloud_pickle
 )
 from src.nlp.components import Component
 from src.nlp.meta import Metadata
@@ -55,7 +57,7 @@ class CountVectorsFeaturizer(Featurizer, Component):
         self.preprocessor = lambda s: re.sub(r'\b[0-9]+\b', 'NUMBER', s)
 
     @staticmethod
-    def _lemmatize(message):
+    def _lemmatize(message: Message):
         if message.get("spacy_doc"):
             return ' '.join([t.lemma_ for t in message.get("spacy_doc")])
         else:
@@ -70,7 +72,8 @@ class CountVectorsFeaturizer(Featurizer, Component):
               cfg: TrainerModelConfig = None,
               **kwargs):
         from sklearn.feature_extraction.text import CountVectorizer
-        # use even single character word as a token(default config is enough)
+        # use even single character word as a token
+        # default config is enough
         self.vector = CountVectorizer(token_pattern=self.token_pattern,
                                       strip_accents=self.strip_accents,
                                       stop_words=self.stop_words,
@@ -83,6 +86,11 @@ class CountVectorsFeaturizer(Featurizer, Component):
 
         lem_exs = [self._lemmatize(example)
                    for example in training_data.intent_examples]
+        # matrix for example input text
+        # [0, 1, 1, 1, 0, 0, 1, 0, 1],
+        # [0, 2, 0, 1, 0, 1, 1, 0, 1],
+        # [1, 0, 0, 1, 1, 0, 1, 1, 1],
+        # [0, 1, 1, 1, 0, 0, 1, 0, 1]]
         try:
             X = self.vector.fit_transform(lem_exs).toarray()
         except ValueError:
@@ -101,3 +109,24 @@ class CountVectorsFeaturizer(Featurizer, Component):
         else:
             bag = self.vector.transform([self._lemmatize(message)]).toarray()
             message.set(TEXT_FEATURES, bag)
+
+    @classmethod
+    def load(cls,
+             model_dir: Text = None,
+             model_metadata: Metadata = None,
+             cached_component: Optional[Component] = None,
+             **kwargs):
+        meta = model_metadata.for_component(cls.name)
+        if model_dir and meta.get('featurizer_file'):
+            file_name = meta['featurizer_file']
+            featurizer_file = os.path.join(model_dir, file_name)
+            return py_cloud_unpickle(featurizer_file)
+        else:
+            logger.warning("Failed to load featurizer. Maybe path {} "
+                           "doesn't exist".format(os.path.abspath(model_dir)))
+            return cls(meta)
+
+    def persist(self, model_dir: Text) -> Dict[Text, Any]:
+        featurizer_file = os.path.join(model_dir, self.name + ".pkl")
+        py_cloud_pickle(featurizer_file, self)
+        return {"featurizer_file": self.name + ".pkl"}

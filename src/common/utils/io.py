@@ -80,3 +80,19 @@ def make_path_absolute(path: Text) -> Text:
     else:
         return path
 
+
+def py_cloud_unpickle(file_name: Text) -> Any:
+    from future.utils import PY2
+    import cloudpickle
+
+    with io.open(file_name, 'rb') as f:
+        if PY2:
+            return cloudpickle.load(f)
+        else:
+            return cloudpickle.load(f, encoding="latin-1")
+
+
+def py_cloud_pickle(file_name: Text, obj: Any):
+    import cloudpickle
+    with io.open(file_name, 'wb') as f:
+        cloudpickle.dump(obj, f)
