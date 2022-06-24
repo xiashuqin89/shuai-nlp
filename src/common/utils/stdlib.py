@@ -2,6 +2,8 @@ import json
 import datetime
 from typing import Dict, Text
 
+import six
+
 
 def json_to_string(obj: Dict, **kwargs) -> str:
     indent = kwargs.pop("indent", 2)
@@ -43,3 +45,10 @@ def ordered(obj):
         return sorted(ordered(x) for x in obj)
     else:
         return obj
+
+
+def as_text_type(t):
+    if isinstance(t, six.text_type):
+        return t
+    else:
+        return six.text_type(t)
