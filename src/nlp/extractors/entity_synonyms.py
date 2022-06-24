@@ -34,13 +34,6 @@ class EntitySynonymMapper(EntityExtractor):
         original = original.lower()
         self.synonyms[original] = replacement
 
-    def _add_processor_name(self, entity: Dict[Text, Any]) -> Dict[Text, Any]:
-        if 'processors' in entity:
-            entity['processors'].append(self.name)
-        else:
-            entity['processors'] = [self.name]
-        return entity
-
     def _replace_synonyms(self, entities: List[Dict]):
         for entity in entities:
             entity_value = str(entity["value"])
@@ -53,12 +46,12 @@ class EntitySynonymMapper(EntityExtractor):
             self._add_entities_if_synonyms(key, value)
 
         for example in training_data.entity_examples:
-            for entity in example.get("entities", []):
+            for entity in example.get(ENTITIES, []):
                 entity_val = example.text[entity["start"]:entity["end"]]
                 self._add_entities_if_synonyms(entity_val, str(entity.get("value")))
 
     def process(self, message: Message, **kwargs):
-        updated_entities = message.get("entities", [])[:]
+        updated_entities = message.get(ENTITIES, [])[:]
         self._replace_synonyms(updated_entities)
         message.set("entities", updated_entities, add_to_output=True)
 

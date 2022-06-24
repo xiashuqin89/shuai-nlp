@@ -24,6 +24,11 @@ class SklearnIntentClassifier(Component):
     name = CLASSIFIER_SKLEARN
     provides = [INTENT, RANKING]
     requires = [TEXT_FEATURES]
+    defaults = {
+        "C": [1, 2, 5, 10, 20, 100],
+        "kernels": ["linear"],
+        "max_cross_validation_folds": 5
+    }
 
     def __init__(self,
                  component_config: Dict[Text, Any] = None,
