@@ -11,7 +11,7 @@ from src.nlp.components import Component
 from src.nlp.meta import Metadata
 from src.nlp.constants import (
     TOKENS, TEXT_FEATURES, FEATURIZER_REGEX,
-    REGEX_FEATURIZER_FILE_NAME
+    FEATURIZER_REGEX_FILE_NAME
 )
 from ..featurizer import Featurizer
 
@@ -74,7 +74,7 @@ class RegexFeaturizer(Featurizer, Component):
              cached_component: Optional[Featurizer] = None,
              **kwargs) -> Featurizer:
         meta = model_metadata.for_component(cls.name)
-        file_name = meta.get("regex_file", REGEX_FEATURIZER_FILE_NAME)
+        file_name = meta.get("regex_file", FEATURIZER_REGEX_FILE_NAME)
         regex_file = os.path.join(model_dir, file_name)
 
         if os.path.exists(regex_file):
@@ -85,6 +85,6 @@ class RegexFeaturizer(Featurizer, Component):
 
     def persist(self, model_dir: Text) -> Optional[Dict[Text, Any]]:
         if self.known_patterns:
-            regex_file = os.path.join(model_dir, REGEX_FEATURIZER_FILE_NAME)
+            regex_file = os.path.join(model_dir, FEATURIZER_REGEX_FILE_NAME)
             write_json_to_file(regex_file, self.known_patterns, indent=4)
-        return {"regex_file": REGEX_FEATURIZER_FILE_NAME}
+        return {"featurizer_regex_file": FEATURIZER_REGEX_FILE_NAME}

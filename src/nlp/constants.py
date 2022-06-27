@@ -15,13 +15,21 @@ CLASSIFIER_KEYWORD = 'intent_classifier_keyword'
 CLASSIFIER_SKLEARN = 'intent_classifier_sklearn'
 
 EXTRACTOR_SYNONYMS = 'ner_synonyms'
+EXTRACTOR_CRF = 'ner_crf'
+EXTRACTOR_REGEX = 'RegexEntityExtractor'
 
 DEFAULT_DICT_FILE_NAME = 'jieba_default_dict'
 USER_DICTS_FOLDER_NAME = 'jieba_user_dicts/'
 USER_DICT_FILE_NAME = USER_DICTS_FOLDER_NAME + 'user_dict.txt'
 
-REGEX_FEATURIZER_FILE_NAME = 'regex_featurizer.json'
+FEATURIZER_REGEX_FILE_NAME = 'featurizer_regex.json'
 
 INTENT_RANKING_LENGTH = 10
 
 ENTITY_SYNONYMS_FILE_NAME = 'entity_synonyms.json'
+ENTITY_ATTRIBUTE_TYPE = 'entity'
+ENTITY_ATTRIBUTE_START = 'start'
+ENTITY_ATTRIBUTE_END = 'end'
+ENTITY_ATTRIBUTE_VALUE = 'value'
+
+ENTITY_REGEX_FILE_NAME = 'entity_regex.json'
