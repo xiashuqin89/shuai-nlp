@@ -1,12 +1,36 @@
 """
 loading config
 """
+import os
 from typing import Dict
 
-from src.common.constants import DEFAULT_CONFIG
+import yaml
+
+from src.common.constants import (
+    DEFAULT_CONFIG, DEFAULT_CONFIG_LOCATION,
+    REGISTERED_PIPELINE_TEMPLATES
+)
 from src.common.utils.stdlib import json_to_string, override_defaults
+from src.common.utils.io import read_yaml_file
 from src.common.log import logger
 from src.common.exceptions import InvalidConfigError
+
+
+def load(filename=None, **kwargs):
+    if filename is None and os.path.isfile(DEFAULT_CONFIG_LOCATION):
+        filename = DEFAULT_CONFIG_LOCATION
+
+    if filename is not None:
+        try:
+            file_config = read_yaml_file(filename)
+        except yaml.parser.ParserError as e:
+            raise InvalidConfigError("Failed to read configuration file "
+                                     "'{}'. Error: {}".format(filename, e))
+        if kwargs:
+            file_config.update(kwargs)
+        return TrainerModelConfig(file_config)
+    else:
+        return TrainerModelConfig(kwargs)
 
 
 def override_defaults(defaults: Dict, custom: Dict) -> Dict:
@@ -30,19 +54,14 @@ class TrainerModelConfig(object):
         self.override(DEFAULT_CONFIG)
         self.override(configuration_values)
 
-        # user use a native pipeline to replace config
-        # if isinstance(self.__dict__['pipeline'], str):
-        #     from rasa_nlu import registry
-        #
-        #     template_name = self.__dict__['pipeline']
-        #     pipeline = registry.pipeline_template(template_name)
-        #
-        #     if pipeline:
-        #         # replaces the template with the actual components
-        #         self.__dict__['pipeline'] = pipeline
-        #     else:
-        #
-        #         raise InvalidConfigError("No pipeline specified and unknown ")
+        if isinstance(self.__dict__['pipeline'], str):
+            template_name = self.__dict__['pipeline']
+            components = REGISTERED_PIPELINE_TEMPLATES.get(template_name)
+            if components:
+                # replaces the template with the actual components
+                self.__dict__['pipeline'] = [{"name": c} for c in components]
+            else:
+                raise InvalidConfigError("No pipeline specified and unknown ")
 
         for key, value in self.items():
             setattr(self, key, value)
