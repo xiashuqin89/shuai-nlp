@@ -12,15 +12,16 @@ from src.common import (
     Message, TrainingData, TrainerModelConfig,
     logger, py_cloud_pickle, py_cloud_unpickle
 )
-from src.nlp.components import Component
 from src.nlp.meta import Metadata
+from src.nlp.components import Component
 from src.nlp.constants import (
     CLASSIFIER_SKLEARN, INTENT, RANKING, TEXT_FEATURES,
     INTENT_RANKING_LENGTH
 )
+from .classifier import Classifier
 
 
-class SklearnIntentClassifier(Component):
+class SklearnIntentClassifier(Classifier):
     name = CLASSIFIER_SKLEARN
     provides = [INTENT, RANKING]
     requires = [TEXT_FEATURES]

@@ -2,18 +2,13 @@ import os
 import re
 from typing import Dict, Text, Any, List, Optional
 
-import sklearn
-
 from src.common import (
     Message, TrainingData, TrainerModelConfig,
-    read_json_file, write_json_to_file, logger,
-    py_cloud_unpickle, py_cloud_pickle
+    logger, py_cloud_unpickle, py_cloud_pickle
 )
 from src.nlp.components import Component
 from src.nlp.meta import Metadata
-from src.nlp.constants import (
-    TOKENS, TEXT_FEATURES, FEATURIZER_REGEX
-)
+from src.nlp.constants import TEXT_FEATURES, FEATURIZER_REGEX
 from ..featurizer import Featurizer
 
 
