@@ -26,6 +26,9 @@ class TrainingData(object):
     def as_json(self, **kwargs) -> Text:
         return DefaultWriter().dumps(self)
 
+    def as_markdown(self) -> Text:
+        pass
+
     def persist(self, dir_name: Text) -> Dict[Text, Any]:
         """Persists this training data to disk"""
         data_file = os.path.join(dir_name, "training_data.json")

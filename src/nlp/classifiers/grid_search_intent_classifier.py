@@ -15,14 +15,14 @@ from src.common import (
 from src.nlp.meta import Metadata
 from src.nlp.components import Component
 from src.nlp.constants import (
-    CLASSIFIER_SKLEARN, INTENT, RANKING, TEXT_FEATURES,
+    CLASSIFIER_GRID_SEARCH, INTENT, RANKING, TEXT_FEATURES,
     INTENT_RANKING_LENGTH
 )
 from .classifier import Classifier
 
 
-class SklearnIntentClassifier(Classifier):
-    name = CLASSIFIER_SKLEARN
+class GridSearchIntentClassifier(Classifier):
+    name = CLASSIFIER_GRID_SEARCH
     provides = [INTENT, RANKING]
     requires = [TEXT_FEATURES]
     defaults = {
@@ -35,7 +35,7 @@ class SklearnIntentClassifier(Classifier):
                  component_config: Dict[Text, Any] = None,
                  clf: GridSearchCV = None,
                  le: LabelEncoder = None):
-        super(SklearnIntentClassifier, self).__init__(component_config)
+        super(GridSearchIntentClassifier, self).__init__(component_config)
         if le is not None:
             self.le = le
         else:
@@ -120,24 +120,3 @@ class SklearnIntentClassifier(Classifier):
         pred_result = self.clf.predict_proba(X)
         sorted_indices = np.fliplr(np.argsort(pred_result, axis=1))
         return sorted_indices, pred_result[:, sorted_indices]
-
-    def persist(self, model_dir: Text) -> Optional[Dict[Text, Any]]:
-        file_name = f'{CLASSIFIER_SKLEARN}.pkl'
-        classifier_file = os.path.join(model_dir, file_name)
-        py_cloud_pickle(classifier_file, self)
-        return {"classifier_file": file_name}
-
-    @classmethod
-    def load(cls,
-             model_dir: Optional[Text] = None,
-             model_metadata: Optional[Metadata] = None,
-             cached_component: Optional[Component] = None,
-             **kwargs):
-        meta = model_metadata.for_component(cls.name)
-        file_name = meta.get("classifier_file", f'{CLASSIFIER_SKLEARN}.pkl')
-        classifier_file = os.path.join(model_dir, file_name)
-
-        if os.path.exists(classifier_file):
-            return py_cloud_unpickle(classifier_file)
-        else:
-            return cls(meta)

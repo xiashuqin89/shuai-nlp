@@ -12,7 +12,8 @@ FEATURIZER_REGEX = 'intent_entity_featurizer_regex'
 FEATURIZER_COUNT_VECTORS = 'intent_featurizer_count_vectors'
 
 CLASSIFIER_KEYWORD = 'intent_classifier_keyword'
-CLASSIFIER_SKLEARN = 'intent_classifier_sklearn'
+CLASSIFIER_GRID_SEARCH = 'intent_classifier_grid_search'
+CLASSIFIER_TF_IDF = 'intent_classifier_tf_idf'
 
 EXTRACTOR_SYNONYMS = 'ner_synonyms'
 EXTRACTOR_CRF = 'ner_crf'
