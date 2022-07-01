@@ -18,6 +18,7 @@ class CountVectorsFeaturizer(Featurizer):
     using sklearn's `CountVectorizer`.
     All tokens which consist only of digits (e.g. 123 and 99
     but not ab12d) will be represented by a single feature.
+    Not adjust to chinese text, need to add tokenizer
     """
     name = FEATURIZER_REGEX
     provides = [TEXT_FEATURES]

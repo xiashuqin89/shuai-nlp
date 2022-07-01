@@ -49,7 +49,7 @@ class TfIdfVectorsFeaturizer(Featurizer):
         return ['sklearn']
 
     @staticmethod
-    def _transform2str(tokens: List[Text]):
+    def _transform_list2str(tokens: List[Text]):
         if not tokens:
             raise PipelineRunningAbnormalError('Need to do tokenizer before feature')
         return ' '.join([token.text[token.offset, token.end] for token in tokens])
@@ -58,11 +58,14 @@ class TfIdfVectorsFeaturizer(Featurizer):
               training_data: TrainingData,
               cfg: TrainerModelConfig = None,
               **kwargs):
+        """
+        todo extract parameter and add stop_words
+        """
         from sklearn.feature_extraction.text import TfidfVectorizer
         self.vector = TfidfVectorizer(use_idf=True, smooth_idf=True)
         logger.info(f'tf-idf feature list {self.vector}')
         documents = [
-            self._transform2str(example.get(TOKENS)) for example in training_data.intent_examples
+            self._transform_list2str(example.get(TOKENS)) for example in training_data.intent_examples
         ]
         self.vector.fit_transform(documents)
 
@@ -70,6 +73,6 @@ class TfIdfVectorsFeaturizer(Featurizer):
         if not self.vector:
             logger.error('Tf-Idf matrix is not init')
         else:
-            bag = self.vector.transform(self._transform2str(message.get(TOKENS))).toarray()
+            bag = self.vector.transform(self._transform_list2str(message.get(TOKENS))).toarray()
             message.set(TEXT_FEATURES, bag)
             message.set(INTENT_FEATURES, self.vector.toarray())
