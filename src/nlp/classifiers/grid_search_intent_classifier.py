@@ -10,10 +10,8 @@ import numpy as np
 
 from src.common import (
     Message, TrainingData, TrainerModelConfig,
-    logger, py_cloud_pickle, py_cloud_unpickle
+    logger
 )
-from src.nlp.meta import Metadata
-from src.nlp.components import Component
 from src.nlp.constants import (
     CLASSIFIER_GRID_SEARCH, INTENT, RANKING, TEXT_FEATURES,
     INTENT_RANKING_LENGTH

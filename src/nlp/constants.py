@@ -1,6 +1,7 @@
 TEXT = 'text'
 TOKENS = 'tokens'
 TEXT_FEATURES = 'text_features'
+INTENT_FEATURES = 'intent_features'
 INTENT = 'intent'
 ENTITIES = 'entities'
 RANKING = 'intent_ranking'
@@ -10,6 +11,7 @@ TOKENIZER_JIEPA = 'tokenizer_jieba'
 
 FEATURIZER_REGEX = 'intent_entity_featurizer_regex'
 FEATURIZER_COUNT_VECTORS = 'intent_featurizer_count_vectors'
+FEATURIZER_TF_IDF = 'intent_featurizer_tf_idf'
 
 CLASSIFIER_KEYWORD = 'intent_classifier_keyword'
 CLASSIFIER_GRID_SEARCH = 'intent_classifier_grid_search'

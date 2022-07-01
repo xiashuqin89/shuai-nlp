@@ -1,80 +1,44 @@
 import os
 from typing import (
-    Dict, Text, Any, List, Tuple, Optional
+    Dict, Text, Any, List, Tuple
 )
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from src.common import (
-    Message, TrainingData, TrainerModelConfig,
+    Message,
     logger
 )
 from src.nlp.constants import (
     INTENT, RANKING, TEXT_FEATURES, CLASSIFIER_TF_IDF,
-    INTENT_RANKING_LENGTH
+    INTENT_RANKING_LENGTH, INTENT_FEATURES
 )
 from .classifier import Classifier
-
-"""
-tv = TfidfVectorizer(use_idf=True, smooth_idf=True, norm=None)
-train = [
-    "Chinese Beijing Chinese",
-    "Chinese Chinese Shanghai",
-    "Chinese Macao",
-    "Tokyo Japan Chinese"
-]
-tv_fit = tv.fit_transform(train)
-print(tv.get_feature_names())
-model = tv_fit.toarray()
-x = model[3].reshape(1, -1)
-print(x)
-
-test = ["Chinese Chinese Chinese Tokyo Japan"]
-test_fit = tv.transform(test)
-y = test_fit.toarray()
-print(y)
-
-s = cosine_similarity(x, y)
-print(s)
-"""
 
 
 class TfIdfIntentClassifier(Classifier):
     name = CLASSIFIER_TF_IDF
     provides = [INTENT, RANKING]
-    requires = [TEXT_FEATURES]
+    requires = [TEXT_FEATURES, INTENT_FEATURES]
 
     def __init__(self,
                  component_config: Dict[Text, Any] = None,
                  intents: List[Dict] = None):
         super(TfIdfIntentClassifier, self).__init__(component_config)
         self.intents = intents if intents else []
-        self.vector = None
         self.matrix = None
 
     @classmethod
     def required_packages(cls) -> List[Text]:
         return ['sklearn']
 
-    def train(self,
-              training_data: TrainingData,
-              cfg: TrainerModelConfig,
-              **kwargs):
-        from sklearn.feature_extraction.text import TfidfVectorizer
-        self.vector = TfidfVectorizer(use_idf=True, smooth_idf=True)
-        logger.info(f'tf-idf feature list {self.vector}')
-        documents = [example.text for example in training_data.intent_examples]
-        try:
-            self.matrix = self.vector.fit_transform(documents).toarray()
-        except ValueError:
-            self.matrix = None
-
     def process(self, message: Message, **kwargs):
         """
         Algorithmic complexity is not good
         need to promote
         """
+        self.matrix = message.get(INTENT_FEATURES)
         if not self.matrix:
             intent = None
             intent_ranking = []

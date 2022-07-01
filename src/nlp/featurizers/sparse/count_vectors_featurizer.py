@@ -104,24 +104,3 @@ class CountVectorsFeaturizer(Featurizer):
         else:
             bag = self.vector.transform([self._lemmatize(message)]).toarray()
             message.set(TEXT_FEATURES, bag)
-
-    @classmethod
-    def load(cls,
-             model_dir: Text = None,
-             model_metadata: Metadata = None,
-             cached_component: Optional[Component] = None,
-             **kwargs):
-        meta = model_metadata.for_component(cls.name)
-        if model_dir and meta.get('featurizer_file'):
-            file_name = meta['featurizer_file']
-            featurizer_file = os.path.join(model_dir, file_name)
-            return py_cloud_unpickle(featurizer_file)
-        else:
-            logger.warning("Failed to load featurizer. Maybe path {} "
-                           "doesn't exist".format(os.path.abspath(model_dir)))
-            return cls(meta)
-
-    def persist(self, model_dir: Text) -> Dict[Text, Any]:
-        featurizer_file = os.path.join(model_dir, self.name + ".pkl")
-        py_cloud_pickle(featurizer_file, self)
-        return {"featurizer_file": self.name + ".pkl"}
