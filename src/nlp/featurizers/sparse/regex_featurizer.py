@@ -7,7 +7,6 @@ from src.common import (
     Message, TrainingData, TrainerModelConfig,
     read_json_file, write_json_to_file
 )
-from src.nlp.components import Component
 from src.nlp.meta import Metadata
 from src.nlp.constants import (
     TOKENS, TEXT_FEATURES, FEATURIZER_REGEX,
@@ -16,7 +15,7 @@ from src.nlp.constants import (
 from ..featurizer import Featurizer
 
 
-class RegexFeaturizer(Featurizer, Component):
+class RegexFeaturizer(Featurizer):
     name = FEATURIZER_REGEX
     provides = [TEXT_FEATURES]
     requires = [TOKENS]

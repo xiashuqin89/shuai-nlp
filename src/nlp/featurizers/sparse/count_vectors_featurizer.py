@@ -12,7 +12,7 @@ from src.nlp.constants import TEXT_FEATURES, FEATURIZER_REGEX
 from ..featurizer import Featurizer
 
 
-class CountVectorsFeaturizer(Featurizer, Component):
+class CountVectorsFeaturizer(Featurizer):
     """
     Creates bag-of-words representation of intent features
     using sklearn's `CountVectorizer`.

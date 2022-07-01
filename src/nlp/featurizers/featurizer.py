@@ -2,9 +2,10 @@ import numpy as np
 
 from src.common import Message
 from src.nlp.constants import TEXT_FEATURES
+from src.nlp.components import Component
 
 
-class Featurizer:
+class Featurizer(Component):
     @staticmethod
     def _combine_with_existing_text_features(message: Message,
                                              additional_features: np.ndarray):
