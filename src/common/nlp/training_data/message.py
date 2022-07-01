@@ -59,10 +59,12 @@ class Message(object):
         return dict(d, text=self.text)
 
     @classmethod
-    def build(cls, text: Text, intent=None, entities=None):
+    def build(cls, text: Text, intent=None, entities=None, id=None):
         data = {}
         if intent:
             data["intent"] = intent
         if entities:
             data["entities"] = entities
+        if id and id.isdigit():
+            data["id"] = int(id)
         return cls(text, data)

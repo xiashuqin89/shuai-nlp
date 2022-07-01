@@ -5,6 +5,7 @@ import errno
 from functools import wraps
 from typing import Text, List, Any
 
+import six
 import yaml
 import simplejson
 
@@ -36,8 +37,29 @@ def read_file(filename, encoding="utf-8"):
         return f.read()
 
 
+def list_directory(path: Text) -> List[Text]:
+    """
+    Returns all files and folders excluding hidden files.
+    If the path points to a file, returns the file. This is a recursive
+    implementation returning files in any depth of the path.
+    """
+
+    if not isinstance(path, six.string_types):
+        raise ValueError("Resource name must be a string type")
+
+    if os.path.isfile(path):
+        return [path]
+    elif os.path.isdir(path):
+        results = []
+        for base, _, files in os.walk(path):
+            results.extend([os.path.join(base, f) for f in files if not f.startswith('.')])
+        return results
+    else:
+        raise ValueError(f"Could not locate the resource '{os.path.abspath(path)}'.")
+
+
 def list_files(path: Text) -> List[Text]:
-    pass
+    return [fn for fn in list_directory(path) if os.path.isfile(fn)]
 
 
 def json_to_string(obj: Any, **kwargs):

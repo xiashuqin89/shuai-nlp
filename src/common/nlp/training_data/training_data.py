@@ -1,5 +1,8 @@
 import os
-from typing import Text, Dict, Any, Optional, List
+from copy import deepcopy
+from typing import (
+    Text, Dict, Any, Optional, List, Set
+)
 
 from src.common.utils.io import read_file, write_to_file
 from .formats.default import DefaultWriter
@@ -55,3 +58,35 @@ class TrainingData(object):
             if ex.get("intent"):
                 ex.set("intent", ex.get("intent").strip())
         return examples
+
+    def intents(self) -> Set:
+        """Returns the set of intents in the training data."""
+        return set([ex.get("intent") for ex in self.training_examples]) - {None}
+
+    def entities(self) -> Set:
+        """Returns the set of entity types in the training data."""
+        entity_types = [e.get("entity") for e in self.sorted_entities()]
+        return set(entity_types)
+
+    def sorted_entities(self) -> List[Any]:
+        """Extract all entities from examples and sorts them by entity type."""
+        entity_examples = [entity
+                           for ex in self.entity_examples
+                           for entity in ex.get("entities")]
+        return sorted(entity_examples, key=lambda e: e["entity"])
+
+    def merge(self, *others):
+        """
+        Return merged instance of this data with other training data.
+        todo clean duplicate synonym
+        """
+        training_examples = deepcopy(self.training_examples)
+        entity_synonyms = self.entity_synonyms.copy()
+        regex_features = deepcopy(self.regex_features)
+
+        for o in others:
+            training_examples.extend(deepcopy(o.training_examples))
+            regex_features.extend(deepcopy(o.regex_features))
+            entity_synonyms.update(o.entity_synonyms)
+
+        return TrainingData(training_examples, entity_synonyms, regex_features)
