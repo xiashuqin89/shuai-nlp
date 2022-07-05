@@ -7,7 +7,7 @@ DEFAULT_CONFIG = {
 # provide system default pipeline config
 # now config is not real config
 REGISTERED_PIPELINE_TEMPLATES = {
-    
+
 }
 DEFAULT_PROJECT_NAME = "default"
 
