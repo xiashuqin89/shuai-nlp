@@ -9,11 +9,12 @@ from src.common import (
 )
 from src.nlp.components import ComponentBuilder
 from src.nlp.persistor import get_persistor
+from cli import Cmd
 
 
-class TrainCmd:
+class TrainCmd(Cmd):
     def __init__(self):
-        pass
+        super().__init__()
 
     @classmethod
     def do_train(cls,
@@ -37,8 +38,7 @@ class TrainCmd:
             persistor = get_persistor(storage)
             trainer.persist(path, persistor, project, fixed_model_name)
 
-    @classmethod
-    def create_argument_parser(cls):
+    def create_argument_parser(self):
         parser = argparse.ArgumentParser(
             description='train a custom language parser')
 
@@ -83,10 +83,10 @@ class TrainCmd:
                                  'E.g. on Qcloud Cos. If nothing is configured, the '
                                  'server will only serve the models that are '
                                  'on disk in the configured `path`.')
-
+        self.add_logging_option_arguments(parser)
         return parser
 
-    def run(self):
+    def console(self):
         cmdline_args = self.create_argument_parser()
         self.do_train(load_config(cmdline_args.config),
                       cmdline_args.data,
@@ -97,3 +97,7 @@ class TrainCmd:
                       url=cmdline_args.url,
                       num_threads=cmdline_args.num_threads)
         logger.info("training finished")
+
+
+if __name__ == '__main__':
+    TrainCmd().console()
