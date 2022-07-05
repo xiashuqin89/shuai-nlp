@@ -1,12 +1,11 @@
 from collections import defaultdict
 
-from src.common.nlp.training_data.formats import (
+from src.common.utils.io import json_to_string
+from src.common.nlp.training_data import TrainingData, Message
+from .utils import transform_entity_synonyms
+from .format import (
     JsonTrainingDataReader, TrainingDataWriter
 )
-from src.common.nlp.training_data import transform_entity_synonyms
-from src.common.nlp.training_data.training_data import TrainingData
-from src.common.nlp.training_data.message import Message
-from src.common.utils.io import json_to_string
 
 
 class DefaultReader(JsonTrainingDataReader):

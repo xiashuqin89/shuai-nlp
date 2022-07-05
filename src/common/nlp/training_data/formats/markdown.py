@@ -1,6 +1,6 @@
 from typing import Text, Any
 
-from src.common.nlp.training_data.formats import (
+from .format import (
     TrainingDataReader, TrainingDataWriter
 )
 

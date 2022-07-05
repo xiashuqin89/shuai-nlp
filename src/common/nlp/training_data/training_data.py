@@ -5,7 +5,7 @@ from typing import (
 )
 
 from src.common.utils.io import read_file, write_to_file
-from .formats.default import DefaultWriter
+from .formats import DefaultWriter
 from .message import Message
 
 
