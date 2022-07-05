@@ -1,0 +1,3 @@
+from .sparse.count_vectors_featurizer import CountVectorsFeaturizer
+from .sparse.tfidf_vecotrs_featurizer import TfIdfVectorsFeaturizer
+from .sparse.regex_featurizer import RegexFeaturizer

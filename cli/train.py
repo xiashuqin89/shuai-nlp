@@ -9,7 +9,7 @@ from src.common import (
 )
 from src.nlp.components import ComponentBuilder
 from src.nlp.persistor import get_persistor
-from cli import Cmd
+from .client import Cmd
 
 
 class TrainCmd(Cmd):

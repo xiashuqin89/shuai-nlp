@@ -37,7 +37,6 @@ class Menu(object):
                                metadata: Metadata,
                                cached_component: Optional[Component],
                                **kwargs) -> Optional[Component]:
-
         component_clz = self.get_component_class(component_name)
         return component_clz.load(model_dir, metadata, cached_component, **kwargs)
 

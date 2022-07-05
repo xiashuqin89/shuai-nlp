@@ -7,7 +7,7 @@ import six
 from src.nlp.components import ComponentBuilder
 from src.engine.runner.runner import Runner
 from src.common import logger
-from cli import Cmd
+from .client import Cmd
 
 
 class ShellCmd(Cmd):
