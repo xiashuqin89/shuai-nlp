@@ -39,9 +39,21 @@ class TfIdfVectorsFeaturizer(Featurizer):
     name = FEATURIZER_TF_IDF
     provides = [TEXT_FEATURES, INTENT_FEATURES]
     requires = [TOKENS]
+    defaults = {
+        "use_idf": True,
+        "smooth_idf": True,
+        "stop_words": None,
+        "max_df": 1.0,
+        "min_df": 1
+    }
 
     def __init__(self, component_config: Dict[Text, Any] = None):
         super(TfIdfVectorsFeaturizer, self).__init__(component_config)
+        self.use_idf = self.component_config.get('use_idf', True)
+        self.smooth_idf = self.component_config.get('smooth_idf', True)
+        self.stop_words = self.component_config.get('stop_words')
+        self.max_df = self.component_config.get('max_df', 1.0)
+        self.min_df = self.component_config.get('min_df', 1)
         self.vector = None
 
     @classmethod
@@ -62,7 +74,9 @@ class TfIdfVectorsFeaturizer(Featurizer):
         todo extract parameter and add stop_words
         """
         from sklearn.feature_extraction.text import TfidfVectorizer
-        self.vector = TfidfVectorizer(use_idf=True, smooth_idf=True)
+        self.vector = TfidfVectorizer(use_idf=self.use_idf, smooth_idf=self.smooth_idf,
+                                      stop_words=self.stop_words,
+                                      max_df=self.max_df, min_df=self.min_df)
         logger.info(f'tf-idf feature list {self.vector}')
         documents = [
             self._transform_list2str(example.get(TOKENS)) for example in training_data.intent_examples
