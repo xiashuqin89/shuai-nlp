@@ -5,7 +5,6 @@ from typing import (
 )
 
 from src.common.utils.io import read_file, write_to_file
-from .formats import DefaultWriter
 from .message import Message
 
 
@@ -27,6 +26,7 @@ class TrainingData(object):
         # self.print_stats()
 
     def as_json(self, **kwargs) -> Text:
+        from .formats import DefaultWriter
         return DefaultWriter().dumps(self)
 
     def as_markdown(self) -> Text:

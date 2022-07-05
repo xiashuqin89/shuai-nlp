@@ -1,6 +1,6 @@
 from typing import Text, Dict, Optional
 
-from src.common import ordered
+from src.common.utils.stdlib import ordered
 
 
 class Message(object):
