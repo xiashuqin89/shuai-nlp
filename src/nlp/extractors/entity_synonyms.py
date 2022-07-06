@@ -4,7 +4,7 @@ from typing import (
 )
 
 from src.common import (
-    TrainingData, Message,
+    TrainingData, Message, TrainerModelConfig,
     as_text_type, write_json_to_file, read_json_file
 )
 from src.nlp.constants import (
@@ -41,7 +41,10 @@ class EntitySynonymMapper(EntityExtractor):
                 entity["value"] = self.synonyms[entity_value.lower()]
                 self._add_processor_name(entity)
 
-    def train(self, training_data: TrainingData, **kwargs):
+    def train(self,
+              training_data: TrainingData,
+              cfg: TrainerModelConfig = None,
+              **kwargs):
         for key, value in list(training_data.entity_synonyms.items()):
             self._add_entities_if_synonyms(key, value)
 
