@@ -19,8 +19,8 @@ class Message(object):
     """
     def __init__(self,
                  text: Text,
-                 data: Dict[Optional] = None,
-                 output_properties: Dict[Optional] = None,
+                 data: Dict = None,
+                 output_properties: Dict = None,
                  time=None):
         self.text = text
         self.time = time
