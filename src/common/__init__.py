@@ -12,7 +12,7 @@ from .utils.stdlib import (
 from .loaders.config import override_defaults, load as load_config
 from .exceptions import (
     InvalidProjectError, MissingArgumentError, UnsupportedModelError,
-    PipelineRunningAbnormalError
+    PipelineRunningAbnormalError, UnsupportedLanguageError
 )
 from .nlp.training_data.message import Message
 from .nlp.training_data.loading import load_data, load_data_from_url
@@ -28,6 +28,7 @@ __all__ = [
     "ordered", "as_text_type",
     "InvalidProjectError", "MissingArgumentError",
     "UnsupportedModelError", "PipelineRunningAbnormalError",
+    "UnsupportedLanguageError",
     "Message",
     "load_data", "load_data_from_url"
 ]

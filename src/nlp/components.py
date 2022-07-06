@@ -5,7 +5,7 @@ from typing import (
 from src.common import (
     TrainerModelConfig, TrainingData,
     override_defaults, logger,
-    MissingArgumentError,
+    MissingArgumentError, UnsupportedLanguageError
 )
 from src.nlp.meta import Metadata
 from src.common import Message
@@ -63,7 +63,10 @@ class Component(object):
 
     @classmethod
     def create(cls, cfg: TrainerModelConfig):
-        pass
+        language = cfg.language
+        if not cls.can_handle_language(language):
+            raise UnsupportedLanguageError(cls.name, language)
+        return cls(cfg.for_component(cls.name, cls.defaults))
 
     def train(self, training_data: TrainingData, cfg: TrainerModelConfig, **kwargs):
         """Train this component.

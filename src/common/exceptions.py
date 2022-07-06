@@ -41,3 +41,16 @@ class PipelineRunningAbnormalError(Exception):
 
     def __str__(self):
         return self.message
+
+
+class UnsupportedLanguageError(Exception):
+    def __init__(self, component: Text, language: Text):
+        self.component = component
+        self.language = language
+
+        super(UnsupportedLanguageError, self).__init__(component, language)
+
+    def __str__(self):
+        return "component {} does not support language {}".format(
+            self.component, self.language
+        )
