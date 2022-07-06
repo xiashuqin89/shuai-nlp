@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from src.common.utils.io import json_to_string
-from src.common.nlp.training_data import TrainingData, Message
 from .utils import transform_entity_synonyms
 from .format import (
     JsonTrainingDataReader, TrainingDataWriter
@@ -10,6 +9,7 @@ from .format import (
 
 class DefaultReader(JsonTrainingDataReader):
     def read_from_json(self, js, **kwargs):
+        from src.common.nlp.training_data import TrainingData, Message
         # todo need to validate file format
         data = js['data']
         common_examples = data.get("common_examples", [])
