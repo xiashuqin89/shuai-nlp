@@ -87,7 +87,7 @@ class TrainCmd(Cmd):
         return parser
 
     def console(self):
-        cmdline_args = self.create_argument_parser()
+        cmdline_args = self.create_argument_parser().parse_args()
         self.do_train(load_config(cmdline_args.config),
                       cmdline_args.data,
                       cmdline_args.path,
