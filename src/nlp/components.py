@@ -149,7 +149,7 @@ class ComponentBuilder(object):
                          menu: Optional) -> Component:
         try:
             component, cache_key = self._get_from_cache(
-                component_name, Metadata(cfg.as_dict(), None))
+                component_name, Metadata(cfg.as_dict(), None), menu)
             if component is None:
                 component = menu.create_component_by_name(component_name, cfg)
                 self._add_to_cache(component, cache_key)
