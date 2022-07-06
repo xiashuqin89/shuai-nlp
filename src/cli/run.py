@@ -38,7 +38,7 @@ class ShellCmd(Cmd):
             logger.info("Next message:")
 
     def console(self) -> Text:
-        cmdline_args = self.create_argument_parser()
+        cmdline_args = self.create_argument_parser().parse_args()
         return self.run(cmdline_args.model)
 
 
