@@ -1,4 +1,6 @@
 import json
+import random
+import string
 import datetime
 from typing import Dict, Text
 
@@ -18,8 +20,12 @@ def override_defaults(defaults: Dict, custom: Dict) -> Dict:
     return cfg
 
 
-def get_tsp(fmt: Text = '%Y-%m-%dT%H:%M:%S') -> Text:
+def get_tsp(fmt: Text = '%Y-%m-%d %H:%M:%S') -> Text:
     return datetime.datetime.now().strftime(fmt)
+
+
+def get_random_str(count: int = 8) -> Text:
+    return ''.join(random.sample(string.ascii_letters + string.digits, count))
 
 
 def module_path_from_object(o):

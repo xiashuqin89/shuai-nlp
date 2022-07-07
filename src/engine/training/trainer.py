@@ -5,7 +5,8 @@ from collections import defaultdict
 
 from src.common import (
     TrainerModelConfig, TrainingData,
-    logger, get_tsp, create_dir, module_path_from_object, make_path_absolute
+    logger, create_dir, module_path_from_object,
+    make_path_absolute, get_random_str
 )
 from src.nlp import Persistor, ComponentBuilder, Metadata
 from src.engine.constants import DEFAULT_PROJECT_NAME
@@ -88,7 +89,7 @@ class Trainer(object):
         metadata = defaultdict()
         metadata["language"] = self.config["language"]
 
-        model_name = fixed_model_name if fixed_model_name else f'model_{get_tsp()}'
+        model_name = fixed_model_name if fixed_model_name else f'model_{get_random_str()}'
         path = make_path_absolute(path)
         project_name = project_name or DEFAULT_PROJECT_NAME
         dir_name = os.path.join(path, project_name, model_name)
