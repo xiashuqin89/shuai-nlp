@@ -76,7 +76,7 @@ class Trainer(object):
     def persist(self,
                 path: Text,
                 persistor: Optional[Persistor] = None,
-                project_name: Text = DEFAULT_PROJECT_NAME,
+                project_name: Text = None,
                 fixed_model_name: Text = None) -> Text:
         """
         Persist all components of the pipeline to the passed path.
@@ -90,6 +90,7 @@ class Trainer(object):
 
         model_name = fixed_model_name if fixed_model_name else f'model_{get_tsp()}'
         path = make_path_absolute(path)
+        project_name = project_name or DEFAULT_PROJECT_NAME
         dir_name = os.path.join(path, project_name, model_name)
         create_dir(dir_name)
 
