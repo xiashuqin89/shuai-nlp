@@ -11,6 +11,7 @@ from src.nlp.constants import (
     ENTITIES, EXTRACTOR_SYNONYMS, ENTITY_SYNONYMS_FILE_NAME
 )
 from src.nlp.meta import Metadata
+from src.nlp.components import Component
 from .extractor import EntityExtractor
 
 
@@ -70,6 +71,7 @@ class EntitySynonymMapper(EntityExtractor):
     def load(cls,
              model_dir: Optional[Text] = None,
              model_metadata: Optional[Metadata] = None,
+             cached_component: Optional[Component] = None,
              **kwargs):
         meta = model_metadata.for_component(cls.name)
         file_name = meta.get("synonyms_file", ENTITY_SYNONYMS_FILE_NAME)
