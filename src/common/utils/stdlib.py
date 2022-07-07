@@ -18,7 +18,7 @@ def override_defaults(defaults: Dict, custom: Dict) -> Dict:
     return cfg
 
 
-def get_tsp(fmt: Text = '%Y-%m-%d %H:%M:%S') -> Text:
+def get_tsp(fmt: Text = '%Y-%m-%dT%H:%M:%S') -> Text:
     return datetime.datetime.now().strftime(fmt)
 
 
