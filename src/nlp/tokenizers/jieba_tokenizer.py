@@ -15,7 +15,7 @@ from src.nlp.constants import (
 from .tokenizer import Tokenizer, Token
 
 
-class JiebaTokenizer(Tokenizer, Component):
+class JiebaTokenizer(Tokenizer):
     name = TOKENIZER_JIEPA
     provides = [TOKENS]
     language_list = ["zh"]

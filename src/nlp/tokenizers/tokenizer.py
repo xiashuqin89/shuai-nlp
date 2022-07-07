@@ -2,6 +2,7 @@ from typing import Text
 
 from src.common import Message, TrainingData, TrainerModelConfig
 from src.nlp.constants import TOKENS
+from src.nlp.components import Component
 
 
 class Token(object):
@@ -26,7 +27,7 @@ class Token(object):
         pass
 
 
-class Tokenizer:
+class Tokenizer(Component):
     def process(self, message: Message, **kwargs):
         message.set(TOKENS, self.tokenize(message.text))
 

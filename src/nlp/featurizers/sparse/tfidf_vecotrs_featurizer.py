@@ -55,6 +55,7 @@ class TfIdfVectorsFeaturizer(Featurizer):
         self.max_df = self.component_config.get('max_df', 1.0)
         self.min_df = self.component_config.get('min_df', 1)
         self.vector = None
+        self.matrix = None
 
     @classmethod
     def required_packages(cls) -> List[Text]:
@@ -81,12 +82,13 @@ class TfIdfVectorsFeaturizer(Featurizer):
         documents = [
             self._transform_list2str(example.get(TOKENS)) for example in training_data.intent_examples
         ]
-        self.vector.fit_transform(documents)
+        self.matrix = self.vector.fit_transform(documents)
 
     def process(self, message: Message, **kwargs):
         if not self.vector:
             logger.error('Tf-Idf matrix is not init')
         else:
-            bag = self.vector.transform(self._transform_list2str(message.get(TOKENS))).toarray()
+            hot = [self._transform_list2str(message.get(TOKENS))]
+            bag = self.vector.transform(hot).toarray()
             message.set(TEXT_FEATURES, bag)
-            message.set(INTENT_FEATURES, self.vector.toarray())
+            message.set(INTENT_FEATURES, self.matrix.toarray())
