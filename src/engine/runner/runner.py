@@ -1,3 +1,4 @@
+import copy
 from typing import List, Dict, Text, Any, Optional
 
 from src.nlp.components import Component, ComponentBuilder, validate_requirements
@@ -91,7 +92,8 @@ class Runner(object):
         for component in self.pipeline:
             component.process(message, **self.context)
 
-        output = self.default_response
-        output.update(message.as_dict(
-            only_output_properties=only_output_properties))
+        output = copy.deepcopy(self.default_response)
+        result = message.as_dict(only_output_properties=only_output_properties)
+        output['intent'] = result['intent']
+        output['entities'] = result['entities']
         return output

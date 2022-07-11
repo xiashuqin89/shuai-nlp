@@ -54,9 +54,10 @@ class TfIdfIntentClassifier(Classifier):
                 intent_ranking = []
             else:
                 max_index = np.argmax(probabilities)
-                intent = {'name': self.intents[max_index], 'confidence': probabilities[max_index]}
+                intent = {'name': self.intents[max_index].get('intent'),
+                          'confidence': probabilities[max_index]}
                 ranking = list(zip(list(intent_ids), list(probabilities)))
-                intent_ranking = [{'name': self.intents[index], 'confidence': score}
+                intent_ranking = [{'name': self.intents[index].get('intent'), 'confidence': score}
                                   for index, score in ranking]
                 intent_ranking.sort(key=lambda x: x['confidence'], reverse=True)
                 intent_ranking = intent_ranking[:INTENT_RANKING_LENGTH]
