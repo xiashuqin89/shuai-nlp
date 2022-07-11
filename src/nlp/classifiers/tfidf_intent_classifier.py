@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from src.common import (
-    Message,
+    Message, TrainingData, TrainerModelConfig,
     logger
 )
 from src.nlp.constants import (
@@ -22,16 +22,20 @@ class TfIdfIntentClassifier(Classifier):
     provides = [INTENT, RANKING]
     requires = [TEXT_FEATURES, INTENT_FEATURES]
 
-    def __init__(self,
-                 component_config: Dict[Text, Any] = None,
-                 intents: List[Dict] = None):
+    def __init__(self, component_config: Dict[Text, Any] = None):
         super(TfIdfIntentClassifier, self).__init__(component_config)
-        self.intents = intents if intents else []
+        self.intents = None
         self.matrix = None
 
     @classmethod
     def required_packages(cls) -> List[Text]:
         return ['sklearn']
+
+    def train(self,
+              training_data: TrainingData,
+              cfg: TrainerModelConfig = None,
+              **kwargs):
+        self.intents = training_data.intent_examples
 
     def process(self, message: Message, **kwargs):
         """
@@ -39,7 +43,7 @@ class TfIdfIntentClassifier(Classifier):
         need to promote
         """
         self.matrix = message.get(INTENT_FEATURES)
-        if not self.matrix:
+        if self.matrix is None:
             intent = None
             intent_ranking = []
         else:

@@ -1,4 +1,4 @@
-from src.cli import TrainCmd
+from src.cli import TrainCmd, ShellCmd
 
 
 TrainCmd().console()
