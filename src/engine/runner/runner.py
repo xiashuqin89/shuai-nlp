@@ -15,9 +15,10 @@ class Runner(object):
         self.pipeline = pipeline
         self.context = context if context is not None else {}
         self.model_metadata = model_metadata
-        self.default_response = {
-            "intent": {"name": "", "confidence": 0.0}, "entities": []
-        }
+
+    @staticmethod
+    def default_output_attributes():
+        return {"intent": {"name": "", "confidence": 0.0}, "entities": []}
 
     @staticmethod
     def ensure_model_compatibility(metadata: Metadata):
@@ -81,17 +82,17 @@ class Runner(object):
         The pipeline result usually contains intent and entities.
         """
 
+        response = self.default_output_attributes()
         if not text:
-            response = self.default_response
             response["text"] = text
             return response
 
-        message = Message(text, self.default_response, time=time)
+        message = Message(text, response, time=time)
 
         for component in self.pipeline:
             component.process(message, **self.context)
 
-        output = self.default_response
+        output = self.default_output_attributes()
         output.update(message.as_dict(
             only_output_properties=only_output_properties))
         return output
