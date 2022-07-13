@@ -29,7 +29,7 @@ class Message(object):
         if output_properties:
             self.output_properties = output_properties
         else:
-            self.output_properties = set(['intent', 'entities'])
+            self.output_properties = set()
 
     def __eq__(self, other):
         if not isinstance(other, Message):
