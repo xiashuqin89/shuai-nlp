@@ -56,9 +56,10 @@ class Management:
             if not command:
                 sys.stdout.write('not a known command\n')
 
-    def fetch_command(self, sub_command: Text) -> Cmd:
+    def fetch_command(self, sub_command: Text) -> bool:
         try:
             module = import_module(f'src.cli.{sub_command}')
         except ModuleNotFoundError:
-            return None
+            return False
         module.call(self.argv[2:])
+        return True
