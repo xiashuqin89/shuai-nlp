@@ -37,10 +37,10 @@ class RunCmd(Cmd):
             print(json.dumps(r, indent=2))
             logger.info("Next message:")
 
-    def console(self) -> Text:
-        cmdline_args = self.create_argument_parser().parse_args()
+    def console(self, argv) -> Text:
+        cmdline_args = self.create_argument_parser().parse_args(argv)
         return self.run(cmdline_args.model)
 
 
-def call():
-    RunCmd().console()
+def call(argv):
+    RunCmd().console(argv)

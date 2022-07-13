@@ -12,7 +12,7 @@ class Cmd(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def console(self):
+    def console(self, *args, **kwargs):
         pass
 
     @classmethod
@@ -56,11 +56,9 @@ class Management:
             if not command:
                 sys.stdout.write('not a known command\n')
 
-    @classmethod
-    def fetch_command(cls, sub_command: Text) -> Cmd:
+    def fetch_command(self, sub_command: Text) -> Cmd:
         try:
             module = import_module(f'src.cli.{sub_command}')
         except ModuleNotFoundError:
             return None
-
-        module.call()
+        module.call(self.argv[2:])

@@ -86,8 +86,8 @@ class TrainCmd(Cmd):
         self.add_logging_option_arguments(parser)
         return parser
 
-    def console(self):
-        cmdline_args = self.create_argument_parser().parse_args()
+    def console(self, argv):
+        cmdline_args = self.create_argument_parser().parse_args(argv)
         self.do_train(load_config(cmdline_args.config),
                       cmdline_args.data,
                       cmdline_args.path,
@@ -99,5 +99,5 @@ class TrainCmd(Cmd):
         logger.info("training finished")
 
 
-def call():
-    TrainCmd().console()
+def call(argv):
+    TrainCmd().console(argv)
