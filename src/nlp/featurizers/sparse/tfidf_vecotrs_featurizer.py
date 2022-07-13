@@ -1,4 +1,5 @@
-from typing import Dict, Text, Any, List, Optional
+import os
+from typing import Dict, Text, Any, List
 
 from src.common import (
     TrainingData, TrainerModelConfig, Message,
@@ -51,11 +52,19 @@ class TfIdfVectorsFeaturizer(Featurizer):
         super(TfIdfVectorsFeaturizer, self).__init__(component_config)
         self.use_idf = self.component_config.get('use_idf', True)
         self.smooth_idf = self.component_config.get('smooth_idf', True)
-        self.stop_words = self.component_config.get('stop_words')
         self.max_df = self.component_config.get('max_df', 1.0)
         self.min_df = self.component_config.get('min_df', 1)
+        self.stop_words = self.component_config.get('stop_words')
+        if not self.stop_words or not os.path.isfile(self.stop_words):
+            self.stop_words = '../../../../corpus/stopwords.txt'
+        with open(self.stop_words, mode='r', encoding='utf-8') as f:
+            data = f.read()
+            self.stop_words = frozenset(data.split('\n'))
         self.vector = None
         self.matrix = None
+
+    def _load_stop_words(self, path):
+        pass
 
     @classmethod
     def required_packages(cls) -> List[Text]:
