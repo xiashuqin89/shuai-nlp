@@ -1,3 +1,4 @@
+import abc
 from typing import Text
 
 from src.common import Message, TrainingData, TrainerModelConfig
@@ -38,5 +39,6 @@ class Tokenizer(Component):
         for example in training_data.training_examples:
             example.set(TOKENS, self.tokenize(example.text))
 
+    @abc.abstractmethod
     def tokenize(self, text: Text):
         pass

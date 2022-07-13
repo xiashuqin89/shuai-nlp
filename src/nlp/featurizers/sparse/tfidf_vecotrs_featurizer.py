@@ -65,7 +65,8 @@ class TfIdfVectorsFeaturizer(Featurizer):
     def _transform_list2str(tokens: List[Text]):
         if not tokens:
             raise PipelineRunningAbnormalError('Need to do tokenizer before feature')
-        return ' '.join([token.text[token.offset: token.end] for token in tokens])
+        document = ' '.join([token.text for token in tokens])
+        return document.strip()
 
     def train(self,
               training_data: TrainingData,
