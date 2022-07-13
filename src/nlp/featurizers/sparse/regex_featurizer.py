@@ -54,7 +54,8 @@ class RegexFeaturizer(Featurizer):
               training_data: TrainingData,
               config: TrainerModelConfig,
               **kwargs):
-        """Add self define regex"""
+        """Add self define regex
+        eg: {"pattern": '[0-9]+', "name": "number", "usage": "intent"}"""
         for example in training_data.regex_features:
             self.known_patterns.append(example)
 

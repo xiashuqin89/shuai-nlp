@@ -47,7 +47,10 @@ class RegexEntityExtractor(EntityExtractor):
 
         return entities
 
-    def train(self, training_data: TrainingData, cfg: TrainerModelConfig, **kwargs):
+    def train(self,
+              training_data: TrainingData,
+              cfg: TrainerModelConfig,
+              **kwargs):
         if not self.patterns:
             logger.warning('No regex input')
 
