@@ -10,9 +10,9 @@ from src.common import logger
 from .client import Cmd
 
 
-class ShellCmd(Cmd):
+class RunCmd(Cmd):
     def __init__(self):
-        super(ShellCmd, self).__init__()
+        super(RunCmd, self).__init__()
 
     def create_argument_parser(self):
         parser = argparse.ArgumentParser(
@@ -42,5 +42,5 @@ class ShellCmd(Cmd):
         return self.run(cmdline_args.model)
 
 
-if __name__ == '__main__':
-    ShellCmd().console()
+def call():
+    RunCmd().console()

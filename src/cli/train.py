@@ -99,5 +99,5 @@ class TrainCmd(Cmd):
         logger.info("training finished")
 
 
-if __name__ == '__main__':
+def call():
     TrainCmd().console()

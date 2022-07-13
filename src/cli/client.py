@@ -1,6 +1,9 @@
 import abc
+import sys
 import logging
 import argparse
+from typing import Text
+from importlib import import_module
 
 
 class Cmd(abc.ABC):
@@ -31,3 +34,33 @@ class Cmd(abc.ABC):
             dest="loglevel",
             const=logging.INFO,
         )
+
+
+class Management:
+    def __init__(self, argv=None):
+        self.argv = argv or sys.argv[:]
+
+    def execute(self):
+        try:
+            sub_command = self.argv[1]
+        except IndexError:
+            sub_command = 'help'
+
+        if sub_command == 'help' or self.argv[1:] in (['--help'], ['-h']):
+            sys.stdout.write(f'try to run python control.py train/run\n')
+        elif sub_command == 'version' or self.argv[1:] == ['--version']:
+            from src.version import __version__
+            sys.stdout.write(f'{__version__}\n')
+        else:
+            command = self.fetch_command(sub_command)
+            if not command:
+                sys.stdout.write('not a known command\n')
+
+    @classmethod
+    def fetch_command(cls, sub_command: Text) -> Cmd:
+        try:
+            module = import_module(f'src.cli.{sub_command}')
+        except ModuleNotFoundError:
+            return None
+
+        module.call()

@@ -1,4 +1,7 @@
-from src.cli import TrainCmd, ShellCmd
+import sys
+
+from src.cli.client import Management
 
 
-TrainCmd().console()
+if __name__ == '__main__':
+    Management(sys.argv).execute()

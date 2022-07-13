@@ -1,2 +1,1 @@
-from .run import ShellCmd
-from .train import TrainCmd
+from .client import Management
