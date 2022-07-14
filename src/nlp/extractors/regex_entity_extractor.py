@@ -51,6 +51,7 @@ class RegexEntityExtractor(EntityExtractor):
               training_data: TrainingData,
               cfg: TrainerModelConfig,
               **kwargs):
+        self.patterns.extend(training_data.regex_features)
         if not self.patterns:
             logger.warning('No regex input')
 
