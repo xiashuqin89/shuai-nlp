@@ -1,3 +1,4 @@
+import re
 import json
 import random
 import string
@@ -58,3 +59,8 @@ def as_text_type(t):
         return t
     else:
         return six.text_type(t)
+
+
+def is_url(resource_name):
+    regex = re.compile(r'http://|https://|ftp://|file://|file:\\')
+    return regex.match(resource_name) is not None

@@ -1,8 +1,11 @@
 import json
 from typing import Optional
 
+import requests
+
 from src.common.nlp.training_data.training_data import TrainingData
 from src.common.utils.io import read_file, list_files
+from src.common.utils.stdlib import is_url
 from src.common.constants import MARKDOWN_AVAILABLE_SECTIONS
 from src.common.log import logger
 from .formats import TrainingDataReader, DomainFormatType
@@ -65,10 +68,14 @@ def load_data(resource_name: str, language: str = 'en') -> TrainingData:
         return data_sets[0].merge(*data_sets[1:])
 
 
-def load_data_from_url(url: str, language: str = 'en'):
+def load_data_from_url(url: str, language: str = 'en') -> TrainingData:
     """
     Load data from net using api
     Only support json format
     """
     # todo need to validate url and response body
-    pass
+    if not is_url(url):
+        raise requests.exceptions.InvalidURL(url)
+
+    response = requests.get(url)
+    return DefaultReader().read_from_json(response)
