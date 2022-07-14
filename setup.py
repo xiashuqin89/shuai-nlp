@@ -2,6 +2,7 @@ import os
 
 from setuptools import setup, find_packages
 
+
 this_directory = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -19,15 +20,28 @@ def read_requirements(filename):
 with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
-packages = find_packages(include=('nonebot', 'nonebot.*'))
+
+packages = find_packages(include=('src', 'src.*'))
+
+requires = [
+    'PyYAML==5.4.1',
+    'simplejson==3.17.6',
+    'jsonschema==3.2.0',
+    'packaging==21.3',
+    'six==1.16.0',
+    'spacy>2.0',
+    'sklearn',
+    'cloudpickle==2.0.0',
+    'future==0.18.2'
+]
+
 
 setup(
-    name='shuai-nlp',
-    version='v1',
-    url='https://github.com/xiashuqin89/shuai-nlp',
+    name='bkchat-nlp',
+    version='1.0.1',
     license='MIT License',
-    author='shuai',
-    description='bot',
+    author='neo',
+    description='nlp',
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=packages,
@@ -47,6 +61,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Typing :: Typed',
     ],
 )
