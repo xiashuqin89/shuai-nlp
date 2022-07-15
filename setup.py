@@ -45,6 +45,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     packages=packages,
+    package_dir= {'shuai': 'src'},
     package_data={
         '': ['*.pyi', 'py.typed'],
     },
