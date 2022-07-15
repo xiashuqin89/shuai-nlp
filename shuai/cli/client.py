@@ -58,7 +58,7 @@ class Management:
 
     def fetch_command(self, sub_command: Text) -> bool:
         try:
-            module = import_module(f'src.cli.{sub_command}')
+            module = import_module(f'shuai.cli.{sub_command}')
         except ModuleNotFoundError:
             return False
         module.call(self.argv[2:])
