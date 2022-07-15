@@ -73,7 +73,6 @@ def load_data_from_url(url: str, language: str = 'en') -> TrainingData:
     Load data from net using api
     Only support json format
     """
-    # todo need to validate url, response body(jsonshcema)
     if not is_url(url):
         raise requests.exceptions.InvalidURL(url)
 
