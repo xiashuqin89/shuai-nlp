@@ -3,11 +3,11 @@ import os
 from setuptools import setup, find_packages
 
 
-this_directory = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def read_file(filename):
-    with open(os.path.join(this_directory, filename), encoding='utf-8') as f:
+    with open(os.path.join(BASE_DIR, filename), encoding='utf-8') as f:
         long_description = f.read()
     return long_description
 
@@ -38,7 +38,7 @@ requires = [
 
 setup(
     name='bkchat-nlp',
-    version='1.0.3',
+    version='1.0.4',
     license='MIT License',
     author='neo',
     description='nlp',
@@ -48,7 +48,7 @@ setup(
     package_data={
         '': ['*.pyi', 'py.typed'],
     },
-    install_requires=requires,
+    install_requires=read_requirements('requirements.txt'),
     extras_require={
         'scheduler': ['apscheduler'],
     },
