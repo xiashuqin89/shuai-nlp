@@ -1,6 +1,6 @@
 import sys
 
-from src.cli.client import Management
+from shuai.cli.client import Management
 
 
 if __name__ == '__main__':
