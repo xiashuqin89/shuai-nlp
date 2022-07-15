@@ -16,6 +16,9 @@ from .extractor import EntityExtractor
 
 
 class EntitySynonymMapper(EntityExtractor):
+    """
+    This component only can extend entity
+    """
     name = EXTRACTOR_SYNONYMS
     provides = [ENTITIES]
 
