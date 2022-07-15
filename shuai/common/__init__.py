@@ -1,5 +1,4 @@
 from .loaders.config import TrainerModelConfig
-from .nlp.training_data.training_data import TrainingData
 from .log import logger
 from .utils.io import (
     write_json_to_file, create_dir, read_json_file, make_path_absolute,
@@ -15,7 +14,8 @@ from .exceptions import (
     PipelineRunningAbnormalError, UnsupportedLanguageError
 )
 from .nlp.training_data.message import Message
-from .nlp.training_data.loading import load_data, load_data_from_url
+from .nlp.training_data.training_data import TrainingData
+from .nlp.training_data.loading import load_data, load_data_from_json, load_data_from_url
 
 
 __all__ = [
@@ -30,5 +30,5 @@ __all__ = [
     "UnsupportedModelError", "PipelineRunningAbnormalError",
     "UnsupportedLanguageError",
     "Message",
-    "load_data", "load_data_from_url"
+    "load_data", "load_data_from_json", "load_data_from_url"
 ]

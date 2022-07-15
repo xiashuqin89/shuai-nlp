@@ -11,7 +11,7 @@ from .format import (
 class DefaultReader(JsonTrainingDataReader):
     def read_from_json(self, js, **kwargs):
         from shuai.common.nlp.training_data import TrainingData, Message
-        # todo need to validate file format
+        validate_nlu_data(js)
         data = js['data']
         common_examples = data.get("common_examples", [])
         intent_examples = data.get("intent_examples", [])

@@ -1,5 +1,5 @@
 import json
-from typing import Optional
+from typing import Optional, Dict, Text, Any
 
 import requests
 
@@ -68,6 +68,10 @@ def load_data(resource_name: str, language: str = 'en') -> TrainingData:
         return data_sets[0].merge(*data_sets[1:])
 
 
+def load_data_from_json(data: Dict[Text, Any]) -> TrainingData:
+    return DefaultReader().read_from_json(data)
+
+
 def load_data_from_url(url: str, language: str = 'en') -> TrainingData:
     """
     Load data from net using api
@@ -77,4 +81,4 @@ def load_data_from_url(url: str, language: str = 'en') -> TrainingData:
         raise requests.exceptions.InvalidURL(url)
 
     response = requests.get(url)
-    return DefaultReader().read_from_json(response)
+    return load_data_from_json({"data": response.get("data")})
