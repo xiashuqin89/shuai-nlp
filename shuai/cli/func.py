@@ -1,3 +1,4 @@
+import sys
 from typing import Text, Dict, Any
 
 from shuai.common import load_data_from_json, TrainerModelConfig, TrainingData
@@ -10,6 +11,7 @@ def train(data: Dict[Text, Any] = None, model_path: Text = 'models'):
     trainer = Trainer(cfg)
     trainer.train(training_data)
     trainer.persist(model_path)
+    sys.stdout.write('Train successfully...\n')
 
 
 def load(model_path: Text) -> Runner:
