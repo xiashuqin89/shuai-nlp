@@ -38,7 +38,7 @@ requires = [
 
 setup(
     name='bkchat-nlp',
-    version='1.0.4',
+    version='1.0.5',
     license='MIT License',
     author='neo',
     description='nlp',
@@ -49,7 +49,7 @@ setup(
     package_data={
         '': ['*.pyi', 'py.typed'],
     },
-    install_requires=read_requirements('requirements.txt'),
+    install_requires=requires,
     extras_require={
         'scheduler': ['apscheduler'],
     },
