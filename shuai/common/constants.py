@@ -7,12 +7,10 @@ DEFAULT_CONFIG = {
     'language': 'en',
     'pipeline': [
         {
-            'name': 'JiebaTokenizer',
-            'user_dicts': os.path.join(BASE_DIR, '../corpus/user_dicts')
+            'name': 'JiebaTokenizer'
         },
         {
             'name': 'TfIdfVectorsFeaturizer',
-            'stop_words': os.path.join(BASE_DIR, '../corpus/stopwords.txt')
         },
         {
             'name': 'TfIdfIntentClassifier'

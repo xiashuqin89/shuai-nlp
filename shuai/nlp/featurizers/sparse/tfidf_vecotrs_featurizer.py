@@ -56,11 +56,10 @@ class TfIdfVectorsFeaturizer(Featurizer):
         self.max_df = self.component_config.get('max_df', 1.0)
         self.min_df = self.component_config.get('min_df', 1)
         self.stop_words = self.component_config.get('stop_words')
-        if not self.stop_words or not os.path.isfile(self.stop_words):
-            self.stop_words = os.path.join(BASE_DIR, '../corpus/stopwords.txt')
-        with open(self.stop_words, mode='r', encoding='utf-8') as f:
-            data = f.read()
-            self.stop_words = frozenset(data.split('\n'))
+        if self.stop_words and os.path.isfile(self.stop_words):
+            with open(self.stop_words, mode='r', encoding='utf-8') as f:
+                data = f.read()
+                self.stop_words = frozenset(data.split('\n'))
         self.vector = None
         self.matrix = None
 
