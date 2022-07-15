@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Dict, Text, Any
 
 from src.common.utils.io import json_to_string
 from .utils import transform_entity_synonyms
@@ -47,3 +48,75 @@ class DefaultWriter(TrainingDataWriter):
                 'entity_synonyms': formatted_synonyms
             }
         }, **kwargs)
+
+
+def validate_nlu_data(data: Dict[Text, Any]):
+    from jsonschema import validate
+    from jsonschema import ValidationError
+
+    try:
+        validate(data, _nlu_data_schema())
+    except ValidationError as e:
+        e.message += (". Failed to validate training data, make sure your data "
+                      "is valid. ")
+        raise e
+
+
+def _nlu_data_schema():
+    training_example_schema = {
+        "type": "object",
+        "properties": {
+            "text": {"type": "string", "minLength": 1},
+            "intent": {"type": "string"},
+            "entities": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "start": {"type": "number"},
+                        "end": {"type": "number"},
+                        "value": {"type": "string"},
+                        "entity": {"type": "string"}
+                    },
+                    "required": ["start", "end", "entity"]
+                }
+            }
+        },
+        "required": ["text"]
+    }
+
+    regex_feature_schema = {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "pattern": {"type": "string"},
+        }
+    }
+
+    return {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "object",
+                "properties": {
+                    "regex_features": {
+                        "type": "array",
+                        "items": regex_feature_schema
+                    },
+                    "common_examples": {
+                        "type": "array",
+                        "items": training_example_schema
+                    },
+                    "intent_examples": {
+                        "type": "array",
+                        "items": training_example_schema
+                    },
+                    "entity_examples": {
+                        "type": "array",
+                        "items": training_example_schema
+                    }
+                }
+            }
+        },
+        "additionalProperties": False
+    }
