@@ -1,14 +1,18 @@
+import os
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_CONFIG_LOCATION = "default.yml"
 DEFAULT_CONFIG = {
     'language': 'en',
     'pipeline': [
         {
             'name': 'JiebaTokenizer',
-            'user_dicts': './corpus/user_dicts'
+            'user_dicts': os.path.join(BASE_DIR, '../corpus/user_dicts')
         },
         {
             'name': 'TfIdfVectorsFeaturizer',
-            'stop_words': './corpus/stopwords.txt'
+            'stop_words': os.path.join(BASE_DIR, '../corpus/stopwords.txt')
         },
         {
             'name': 'TfIdfIntentClassifier'

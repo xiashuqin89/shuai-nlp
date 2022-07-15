@@ -32,13 +32,14 @@ requires = [
     'spacy>2.0',
     'sklearn',
     'cloudpickle==2.0.0',
-    'future==0.18.2'
+    'future==0.18.2',
+    'jieba==0.42.1'
 ]
 
 
 setup(
     name='bkchat-nlp',
-    version='1.1.0',
+    version='1.1.1',
     license='MIT License',
     author='neo',
     description='nlp',

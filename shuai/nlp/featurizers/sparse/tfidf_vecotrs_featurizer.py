@@ -9,6 +9,7 @@ from shuai.common import (
 from shuai.nlp.constants import (
     TEXT_FEATURES, FEATURIZER_TF_IDF, TOKENS, INTENT_FEATURES
 )
+from shuai.common.constants import BASE_DIR
 from ..featurizer import Featurizer
 
 
@@ -56,7 +57,7 @@ class TfIdfVectorsFeaturizer(Featurizer):
         self.min_df = self.component_config.get('min_df', 1)
         self.stop_words = self.component_config.get('stop_words')
         if not self.stop_words or not os.path.isfile(self.stop_words):
-            self.stop_words = '../../../../corpus/stopwords.txt'
+            self.stop_words = os.path.join(BASE_DIR, '../corpus/stopwords.txt')
         with open(self.stop_words, mode='r', encoding='utf-8') as f:
             data = f.read()
             self.stop_words = frozenset(data.split('\n'))
