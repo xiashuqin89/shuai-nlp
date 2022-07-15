@@ -21,7 +21,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
     long_description = f.read()
 
 
-packages = find_packages(include=('src', 'src.*'))
+packages = find_packages(include=('shuai', 'shuai.*'))
 
 requires = [
     'PyYAML==5.4.1',
