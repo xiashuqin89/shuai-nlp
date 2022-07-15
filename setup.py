@@ -38,7 +38,7 @@ requires = [
 
 setup(
     name='bkchat-nlp',
-    version='1.0.6',
+    version='1.0.7',
     license='MIT License',
     author='neo',
     description='nlp',
