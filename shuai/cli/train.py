@@ -1,7 +1,7 @@
 import argparse
 from typing import Text, Optional
 
-from shuai.engine.training import Trainer
+from shuai.engine import Trainer
 from shuai.common import (
     TrainerModelConfig,
     load_data, load_data_from_url,

@@ -5,7 +5,7 @@ from typing import Text
 import six
 
 from shuai.nlp.components import ComponentBuilder
-from shuai.engine.runner.runner import Runner
+from shuai.engine import Runner
 from shuai.common import logger
 from .client import Cmd
 
