@@ -13,6 +13,7 @@ def train(data: Dict[Text, Any],
           model_path: Text = 'models',
           stop_words_path: Text = None,
           user_dict_path: Text = None) -> Text:
+    """todo add custom stopwords and userdict to config"""
     training_data: TrainingData = load_data_from_json(data)
     if cfg_path:
         cfg: TrainerModelConfig = load_config(cfg_path)
@@ -30,4 +31,5 @@ def load(model_path: Text) -> Runner:
 
 
 def parse(text: Text, interpreter: Runner) -> Dict:
+    """todo avoid jieba reloading"""
     return interpreter.parse(text)
