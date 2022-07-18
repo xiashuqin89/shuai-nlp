@@ -1,17 +1,26 @@
 import sys
 from typing import Text, Dict, Any
 
-from shuai.common import load_data_from_json, TrainerModelConfig, TrainingData
+from shuai.common import (
+    TrainerModelConfig, TrainingData,
+    load_config, load_data_from_json
+)
 from shuai.engine import Trainer, Runner
 
 
-def train(data: Dict[Text, Any] = None, model_path: Text = 'models'):
+def train(data: Dict[Text, Any],
+          cfg_path: Text = None,
+          model_path: Text = 'models') -> Text:
     training_data = load_data_from_json(data)
-    cfg = TrainerModelConfig()
+    if cfg_path:
+        cfg = load_config(cfg_path)
+    else:
+        cfg = TrainerModelConfig()
     trainer = Trainer(cfg)
     trainer.train(training_data)
-    trainer.persist(model_path)
+    dir_name = trainer.persist(model_path)
     sys.stdout.write('Train successfully...\n')
+    return dir_name
 
 
 def load(model_path: Text) -> Runner:
