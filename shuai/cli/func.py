@@ -10,7 +10,9 @@ from shuai.engine import Trainer, Runner
 
 def train(data: Dict[Text, Any],
           cfg_path: Text = None,
-          model_path: Text = 'models') -> Text:
+          model_path: Text = 'models',
+          stop_words_path: Text = None,
+          user_dict_path: Text = None) -> Text:
     training_data: TrainingData = load_data_from_json(data)
     if cfg_path:
         cfg: TrainerModelConfig = load_config(cfg_path)
