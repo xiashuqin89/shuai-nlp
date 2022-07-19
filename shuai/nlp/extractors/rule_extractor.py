@@ -1,9 +1,8 @@
 import re
+import itertools
 from typing import Dict, Text, Any, List, Optional
 
-from shuai.common import (
-    Message, TrainingData, TrainerModelConfig
-)
+from shuai.common import Message
 from shuai.nlp.meta import Metadata
 from shuai.nlp.constants import (
     EXTRACTOR_RULE, ENTITIES, TOKENS,
@@ -48,9 +47,8 @@ class RuleEntityExtractor(EntityExtractor):
         return entities
 
     def _extract_entities(self, message: Message) -> List[Dict[Text, Any]]:
-        entities = []
-        for rule in self.rules:
-            entities.extend(getattr(self, f'_{rule}')(message.text))
+        entities = [getattr(self, f'_{rule}')(message.text) for rule in self.rules]
+        return list(itertools.chain.from_iterable(entities))
 
     def process(self, message: Message, **kwargs):
         extracted = self._extract_entities(message)
