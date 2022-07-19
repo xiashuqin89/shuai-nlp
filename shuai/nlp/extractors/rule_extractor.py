@@ -32,18 +32,13 @@ class RuleEntityExtractor(EntityExtractor):
         self.rules.extend(self.default)
 
     @classmethod
-    def create(cls, config: TrainerModelConfig):
-        return RuleEntityExtractor(config.for_component(cls.name, cls.defaults),
-                                   config.rule)
-
-    @classmethod
     def _loc_match(cls, text: Text) -> List:
         entities = []
         matchers = re.finditer(r'\$\{.*?\=.*?\}', text)
         for matcher in matchers:
             start = matcher.start()
             end = matcher.end()
-            name, value = matcher[start + 2: end - 1].split('=')
+            name, value = text[start + 2: end - 1].split('=')
             entities.append({
                 ENTITY_ATTRIBUTE_TYPE: name,
                 ENTITY_ATTRIBUTE_START: start,
