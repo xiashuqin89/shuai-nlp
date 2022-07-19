@@ -20,6 +20,7 @@ CLASSIFIER_TF_IDF = 'TfIdfIntentClassifier'
 EXTRACTOR_SYNONYMS = 'EntitySynonymMapper'
 EXTRACTOR_CRF = 'CRFEntityExtractor'
 EXTRACTOR_REGEX = 'RegexEntityExtractor'
+EXTRACTOR_RULE = 'RuleEntityExtractor'
 
 DEFAULT_DICT_FILE_NAME = 'jieba_default_dict'
 USER_DICTS_FOLDER_NAME = 'jieba_user_dicts/'

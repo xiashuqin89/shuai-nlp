@@ -4,102 +4,122 @@
       {
         "text": "你好",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "你好啊",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "你好吗",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "hello",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "hi",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "早上好",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "晚上好",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "嗨",
         "intent": "greet",
-        "entities": []
+        "entities": [],
+        "id": 1
       },
       {
         "text": "是的",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "是",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "对的",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "确实",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "好",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "ok",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "好的",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "好的，谢谢你",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "对的",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "好滴",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "好啊",
         "intent": "affirm",
-        "entities": []
+        "entities": [],
+        "id": 2
       },
       {
         "text": "我想找地方吃饭",
         "intent": "restaurant_search",
-        "entities": []
+        "entities": [],
+        "id": 3
       },
       {
         "text": "我想吃火锅啊",
@@ -111,7 +131,8 @@
             "value": "火锅",
             "entity": "food"
           }
-        ]
+        ],
+        "id": 3
       },
       {
         "text": "找个吃拉面的店",
@@ -123,7 +144,8 @@
             "value": "拉面",
             "entity": "food"
           }
-        ]
+        ],
+        "id": 3
       },
       {
         "text": "这附近哪里有吃麻辣烫的地方",
@@ -135,52 +157,62 @@
             "value": "麻辣烫",
             "entity": "food"
           }
-        ]
+        ],
+        "id": 3
       },
       {
         "text": "附近有什么好吃的地方吗",
         "intent": "restaurant_search",
-        "entities": []
+        "entities": [],
+        "id": 3
       },
       {
         "text": "肚子饿了，推荐一家吃放的地儿呗",
         "intent": "restaurant_search",
-        "entities": []
+        "entities": [],
+        "id": 3
       },
       {
         "text": "带老婆孩子去哪里吃饭比较好",
         "intent": "restaurant_search",
-        "entities": []
+        "entities": [],
+        "id": 3
       },
       {
         "text": "想去一家有情调的餐厅",
         "intent": "restaurant_search",
-        "entities": []
+        "entities": [],
+        "id": 3
       },
       {
         "text": "bye",
         "intent": "goodbye",
-        "entities": []
+        "entities": [],
+        "id": 4
       },
       {
         "text": "再见",
         "intent": "goodbye",
-        "entities": []
+        "entities": [],
+        "id": 4
       },
       {
         "text": "886",
         "intent": "goodbye",
-        "entities": []
+        "entities": [],
+        "id": 4
       },
       {
         "text": "拜拜",
         "intent": "goodbye",
-        "entities": []
+        "entities": [],
+        "id": 4
       },
       {
         "text": "下次见",
         "intent": "goodbye",
-        "entities": []
+        "entities": [],
+        "id": 4
       },
       {
         "text": "感冒了怎么办",
@@ -192,7 +224,8 @@
             "value": "感冒",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "我便秘了，该吃什么药",
@@ -204,7 +237,8 @@
             "value": "便秘",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "我胃痛，该吃什么药？",
@@ -216,7 +250,8 @@
             "value": "胃痛",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "一直打喷嚏怎么办",
@@ -228,7 +263,8 @@
             "value": "打喷嚏",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "父母都有高血压，我会遗传吗",
@@ -240,12 +276,14 @@
             "value": "高血压",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "我生病了",
         "intent": "medical",
-        "entities": []
+        "entities": [],
+        "id": 5
       },
       {
         "text": "头上烫烫的，感觉发烧了",
@@ -257,27 +295,32 @@
             "value": "发烧",
             "entity": "disease"
           }
-        ]
+        ],
+        "id": 5
       },
       {
         "text": "头很疼该怎么办",
         "intent": "medical",
-        "entities": []
+        "entities": [],
+        "id": 5
       },
       {
         "text": "减肥有什么好方法吗？",
         "intent": "medical",
-        "entities": []
+        "entities": [],
+        "id": 5
       },
       {
         "text": "怎样良好的生活习惯才能预防生病呢",
         "intent": "medical",
-        "entities": []
+        "entities": [],
+        "id": 5
       },
       {
         "text": "怎样良好的生活习惯才能预防生病呢",
         "intent": "medical",
-        "entities": []
+        "entities": [],
+        "id": 5
       },
       {
         "text": "查电话19820618425",
@@ -289,7 +332,8 @@
             "value": "19820618425",
             "entity": "phone_number"
           }
-        ]
+        ],
+        "id": 6
       },
       {
         "text": "我想查电话号码19860618422的账户余额",
@@ -301,7 +345,8 @@
             "value": "19860618422",
             "entity": "phone_number"
           }
-        ]
+        ],
+        "id": 6
       },
       {
         "text": "这个号码是属于谁",
@@ -313,7 +358,8 @@
             "value": "属于谁",
             "entity": "business"
           }
-        ]
+        ],
+        "id": 6
       }
     ],
     "regex_features": [
