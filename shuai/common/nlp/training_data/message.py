@@ -65,6 +65,6 @@ class Message(object):
             data["intent"] = intent
         if entities:
             data["entities"] = entities
-        if isinstance(id, int) or id.isdigit():
+        if id is not None and (isinstance(id, int) or id.isdigit()):
             data["id"] = int(id)
         return cls(text, data)
