@@ -1,9 +1,10 @@
 import sys
-from typing import Text, Dict, Any
+from typing import Text, Dict, Any, List
 
 from shuai.common import (
     TrainerModelConfig, TrainingData,
-    load_config, load_data_from_json
+    load_config, load_data_from_json,
+    AutoPattern,
 )
 from shuai.engine import Trainer, Runner
 
@@ -33,3 +34,12 @@ def load(model_path: Text) -> Runner:
 def parse(text: Text, interpreter: Runner) -> Dict:
     """todo avoid jieba reloading"""
     return interpreter.parse(text)
+
+
+def sign_regex(serial: List[Text],
+               entropy: float = .7,
+               regex_entropy: float = .3,
+               deep: int = 1) -> Text:
+    ap = AutoPattern(serial, entropy, regex_entropy)
+    ap.generate(deep)
+    return ap.build()

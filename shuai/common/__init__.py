@@ -8,6 +8,7 @@ from .utils.stdlib import (
     get_tsp, module_path_from_object, class_from_module_path, ordered,
     as_text_type, get_random_str
 )
+from .utils.create_regex import AutoPattern
 from .loaders.config import override_defaults, load as load_config
 from .exceptions import (
     InvalidProjectError, MissingArgumentError, UnsupportedModelError,
@@ -26,6 +27,7 @@ __all__ = [
     "make_path_absolute", "py_cloud_unpickle", "py_cloud_pickle",
     "get_tsp", "module_path_from_object", "class_from_module_path",
     "ordered", "as_text_type", "get_random_str",
+    "AutoPattern",
     "InvalidProjectError", "MissingArgumentError",
     "UnsupportedModelError", "PipelineRunningAbnormalError",
     "UnsupportedLanguageError",
