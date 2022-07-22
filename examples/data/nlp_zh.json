@@ -366,16 +366,15 @@
       {
         "pattern": "[0-9]+",
         "name": "number",
-        "usage": "intent"
+        "usage": "request_phone_business"
       },
       {
         "pattern": "\\bhey*",
-        "name": "hello",
-        "usage": "intent"
+        "name": "hello"
       },
       {
-        "name": "zipcode",
-        "pattern": "[0-9]{5}"
+        "pattern": "[0-9]{5}",
+        "name": "zipcode"
       },
       {
         "name": "greet",
@@ -383,7 +382,8 @@
       },
       {
         "name": "phone_number",
-        "pattern": "((\\d{3,4}-)?\\d{7,8})|(((\\+86)|(86))?(1)\\d{10})"
+        "pattern": "((\\d{3,4}-)?\\d{7,8})|(((\\+86)|(86))?(1)\\d{10})",
+        "usage": "request_phone_business"
       }
     ],
     "entity_synonyms": [

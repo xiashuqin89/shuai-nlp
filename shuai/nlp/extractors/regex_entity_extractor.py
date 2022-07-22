@@ -8,7 +8,7 @@ from shuai.common import (
 )
 from shuai.nlp.meta import Metadata
 from shuai.nlp.constants import (
-    EXTRACTOR_REGEX, ENTITIES, TOKENS,
+    EXTRACTOR_REGEX, ENTITIES, TOKENS, INTENT,
     ENTITY_ATTRIBUTE_TYPE, ENTITY_ATTRIBUTE_START, ENTITY_ATTRIBUTE_END,
     ENTITY_ATTRIBUTE_VALUE, ENTITY_REGEX_FILE_NAME
 )
@@ -18,7 +18,7 @@ from .extractor import EntityExtractor
 class RegexEntityExtractor(EntityExtractor):
     name = EXTRACTOR_REGEX
     provides = [ENTITIES]
-    requires = [TOKENS]
+    requires = [TOKENS, INTENT]
 
     def __init__(self,
                  component_config: Dict[Text, Any] = None,
@@ -34,6 +34,8 @@ class RegexEntityExtractor(EntityExtractor):
             flags = re.IGNORECASE
 
         for pattern in self.patterns:
+            if pattern.get('usage') and pattern['usage'] != message.get(INTENT).get('name'):
+                continue
             matchers = re.finditer(pattern['pattern'], message.text, flags=flags)
             for matcher in matchers:
                 start = matcher.start()
