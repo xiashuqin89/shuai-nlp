@@ -1,9 +1,8 @@
+import re
 import math
 from typing import Text, List
 
 import pandas as pd
-
-from shuai.common.exceptions import AlgorithmError
 
 
 class HalfPatten:
@@ -110,7 +109,7 @@ class AutoPattern:
                     i += 1
                     j = 1
             return t[start: start + max_len - 1]
-        except AlgorithmError:
+        except re.error:
             return ''
 
     def generate(self, deep: int = 1):
