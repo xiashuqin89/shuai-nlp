@@ -10,6 +10,10 @@ class RequestError(Exception):
     pass
 
 
+class AlgorithmError(Exception):
+    pass
+
+
 class InvalidProjectError(Exception):
     def __init__(self, message: Text):
         self.message = message

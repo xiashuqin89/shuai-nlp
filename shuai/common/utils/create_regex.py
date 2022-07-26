@@ -1,8 +1,9 @@
 import math
-import copy
 from typing import Text, List
 
 import pandas as pd
+
+from shuai.common.exceptions import AlgorithmError
 
 
 class HalfPatten:
@@ -98,16 +99,19 @@ class AutoPattern:
         t = df[col][0]
         start, max_len = 0, 1
         i, j = 0, 1
-        while (i + j) < len(t):
-            if all(df[col].str.contains(t[i: i + j])):
-                j += 1
-            else:
-                if max_len < j:
-                    start = i
-                    max_len = j
-                i += 1
-                j = 1
-        return t[start: start + max_len - 1]
+        try:
+            while (i + j) < len(t):
+                if all(df[col].str.contains(t[i: i + j])):
+                    j += 1
+                else:
+                    if max_len < j:
+                        start = i
+                        max_len = j
+                    i += 1
+                    j = 1
+            return t[start: start + max_len - 1]
+        except AlgorithmError:
+            return ''
 
     def generate(self, deep: int = 1):
         x = self.x
