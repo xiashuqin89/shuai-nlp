@@ -1,11 +1,10 @@
 from typing import Text, List
 
-from shuai.nlp.components import Component
 from shuai.nlp.constants import TOKENS, TOKENIZER_WHITESPACE
 from .tokenizer import Tokenizer, Token
 
 
-class WhitespaceTokenizer(Tokenizer, Component):
+class WhitespaceTokenizer(Tokenizer):
     name = TOKENIZER_WHITESPACE
 
     provides = [TOKENS]

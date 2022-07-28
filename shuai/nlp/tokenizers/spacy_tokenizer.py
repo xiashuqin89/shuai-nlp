@@ -2,13 +2,12 @@ from typing import List
 
 from spacy.tokens.doc import Doc
 
-from shuai.nlp.components import Component
 from shuai.common import TrainerModelConfig, TrainingData, Message
 from shuai.nlp.constants import TOKENS
 from .tokenizer import Tokenizer, Token
 
 
-class SpacyTokenizer(Tokenizer, Component):
+class SpacyTokenizer(Tokenizer):
     name = "tokenizer_spacy"
     provides = [TOKENS]
 
