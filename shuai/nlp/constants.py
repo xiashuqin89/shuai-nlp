@@ -16,6 +16,7 @@ FEATURIZER_TF_IDF = 'TfIdfVectorsFeaturizer'
 CLASSIFIER_KEYWORD = 'KeywordIntentClassifier'
 CLASSIFIER_GRID_SEARCH = 'GridSearchIntentClassifier'
 CLASSIFIER_TF_IDF = 'TfIdfIntentClassifier'
+CLASSIFIER_BM25 = 'BM25IntentClassifier'
 
 EXTRACTOR_SYNONYMS = 'EntitySynonymMapper'
 EXTRACTOR_CRF = 'CRFEntityExtractor'

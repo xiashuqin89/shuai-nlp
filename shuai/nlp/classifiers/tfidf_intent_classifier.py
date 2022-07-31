@@ -61,8 +61,8 @@ class TfIdfIntentClassifier(Classifier):
                 intent_ranking.sort(key=lambda x: x['confidence'], reverse=True)
                 intent_ranking = intent_ranking[:INTENT_RANKING_LENGTH]
 
-        message.set("intent", intent, add_to_output=True)
-        message.set("intent_ranking", intent_ranking, add_to_output=True)
+        message.set(INTENT, intent, add_to_output=True)
+        message.set(RANKING, intent_ranking, add_to_output=True)
 
     def predict(self, X: List) -> Tuple[np.ndarray, np.ndarray]:
         try:
