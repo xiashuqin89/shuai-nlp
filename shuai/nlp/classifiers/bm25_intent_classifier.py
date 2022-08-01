@@ -84,13 +84,16 @@ class BM25IntentClassifier(Classifier):
               training_data: TrainingData,
               cfg: TrainerModelConfig = None,
               **kwargs):
-        train_data = pd.DataFrame(training_data.intent_examples)
-        logger.info(f'read train conf, size={train_data}')
-        train_data = train_data.drop_duplicates(keep='first').reset_index(drop=True)
-        logger.info(f'removed duplication size={train_data}')
-        document_cnt = len(train_data)
 
-        tokens_corpus: List[List[object]] = train_data[TOKENS]
+        clean_train_data = pd.DataFrame([
+            {'intent': eg.data['intent'], 'text': eg.text} for eg in training_data.intent_examples
+        ])
+        logger.info(f'read train conf, size={clean_train_data}')
+        clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
+        logger.info(f'removed duplication size={clean_train_data}')
+        document_cnt = len(clean_train_data)
+
+        tokens_corpus: List[List[object]] = [eg.get(TOKENS) for eg in training_data.intent_examples]
         word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
         self.top_keywords = self._get_top_keywords(word_matrix)
 
@@ -99,7 +102,7 @@ class BM25IntentClassifier(Classifier):
         self.model = {
             'SCORE': score,
             'top_keywords': self.top_keywords,
-            'data': train_data,
+            'data': clean_train_data,
             'args': {'document_len': dl, 'avg_document_len': avg_dl, 'document_cnt': document_cnt}
         }
 
