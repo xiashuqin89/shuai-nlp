@@ -111,10 +111,12 @@ class BM25IntentClassifier(Classifier):
         document_cnt = self.model.get('args').get('document_cnt')
         score = self.model.get('SCORE')
         tokens_freq_vector = np.array([query_word_freq.get(i, 0) for i in self.top_keywords])
+        repeated_tokens_freq_vector = np.tile(tokens_freq_vector, (document_cnt, 1))
         tokens_vec_index = np.where(tokens_freq_vector > 0, 1, 0)
-        tmp = np.tile(tokens_freq_vector, (document_cnt, 1))
         corr_ratios = np.sum(
-            np.tile(tokens_vec_index, (document_cnt, 1)) * score * (tmp * (self.k2 + 1) / (tmp + self.k2)),
+            np.tile(
+                tokens_vec_index, (document_cnt, 1)
+            ) * score * (repeated_tokens_freq_vector * (self.k2 + 1) / (repeated_tokens_freq_vector + self.k2)),
             axis=1
         )
         corr_records_index = np.nonzero(corr_ratios)[0]
