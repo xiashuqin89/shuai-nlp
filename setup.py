@@ -35,6 +35,7 @@ requires = [
     'future==0.18.2',
     'jieba==0.42.1',
     'pandas==1.1.5',
+    'Levenshtein==0.20.1',
 ]
 
 

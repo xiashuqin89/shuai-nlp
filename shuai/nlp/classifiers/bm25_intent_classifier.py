@@ -86,7 +86,7 @@ class BM25IntentClassifier(Classifier):
               **kwargs):
 
         clean_train_data = pd.DataFrame([
-            {'intent': eg.data['intent'], 'text': eg.text} for eg in training_data.intent_examples
+            {'text': eg.text, 'data': eg.data} for eg in training_data.intent_examples
         ])
         logger.info(f'read train conf, size={clean_train_data}')
         # clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
@@ -108,7 +108,13 @@ class BM25IntentClassifier(Classifier):
 
     def process(self, message: Message, **kwargs):
         segment = Counter([token.text for token in message.get(TOKENS)])
-        message.set(INTENT, self.predict(segment))
+        results = self.predict(segment)
+        if results:
+            intent = results[0]
+            message.set(INTENT, {
+                'intent': {'name': intent['intent'], 'confidence': intent['score']},
+                'text': intent['text']
+            })
 
     def predict(self, query_word_freq: Counter) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
@@ -127,5 +133,7 @@ class BM25IntentClassifier(Classifier):
             return []
         corr_records = self.model.get('data').loc[corr_records_index].reset_index()
         corr_records["score"] = corr_ratios[corr_records_index]
-        # todo sort and get top k by score
-        return corr_records.to_dict('records')
+        # todo sort and get top k by score towards cos similarity
+        records = corr_records.to_dict('records')
+        sorted(records, key=lambda x: x['score'], reverse=True)
+        return records
