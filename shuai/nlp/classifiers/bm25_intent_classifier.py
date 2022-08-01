@@ -89,15 +89,15 @@ class BM25IntentClassifier(Classifier):
             {'intent': eg.data['intent'], 'text': eg.text} for eg in training_data.intent_examples
         ])
         logger.info(f'read train conf, size={clean_train_data}')
-        clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
+        # clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
         logger.info(f'removed duplication size={clean_train_data}')
-        document_cnt = len(clean_train_data)
 
         tokens_corpus: List[List[object]] = [eg.get(TOKENS) for eg in training_data.intent_examples]
         word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
         self.top_keywords = self._get_top_keywords(word_matrix)
 
         tf = self._construct_count_vector(word_matrix)
+        document_cnt = len(clean_train_data)
         score, dl, avg_dl = self.calculate(document_cnt, tf)
         self.model = {
             'SCORE': score,
