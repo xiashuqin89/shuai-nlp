@@ -116,7 +116,7 @@ class BM25IntentClassifier(Classifier):
                 'name': intent['data']['intent'],
                 'confidence': intent['score'],
                 'text': intent['text']
-            })
+            }, add_to_output=True)
 
     def predict(self, query_word_freq: Counter) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
