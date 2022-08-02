@@ -107,12 +107,14 @@ class BM25IntentClassifier(Classifier):
         }
 
     def process(self, message: Message, **kwargs):
+        # todo transform score to percent
         segment = Counter([token.text for token in message.get(TOKENS)])
         results = self.predict(segment)
         if results:
             intent = results[0]
             message.set(INTENT, {
-                'intent': {'name': intent['intent'], 'confidence': intent['score']},
+                'name': intent['data']['intent'],
+                'confidence': intent['score'],
                 'text': intent['text']
             })
 
@@ -133,7 +135,6 @@ class BM25IntentClassifier(Classifier):
             return []
         corr_records = self.model.get('data').loc[corr_records_index].reset_index()
         corr_records["score"] = corr_ratios[corr_records_index]
-        # todo sort and get top k by score towards cos similarity
         records = corr_records.to_dict('records')
-        sorted(records, key=lambda x: x['score'], reverse=True)
+        records.sort(key=lambda x: x['score'], reverse=True)
         return records
