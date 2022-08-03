@@ -1,13 +1,11 @@
 import os
 import re
-from typing import Dict, Text, Any, List, Optional
+from typing import Dict, Text, Any, List
 
 from shuai.common import (
     Message, TrainingData, TrainerModelConfig,
-    logger, py_cloud_unpickle, py_cloud_pickle
+    logger
 )
-from shuai.nlp.components import Component
-from shuai.nlp.meta import Metadata
 from shuai.nlp.constants import TEXT_FEATURES, FEATURIZER_REGEX
 from ..featurizer import Featurizer
 
