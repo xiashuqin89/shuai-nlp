@@ -9,7 +9,6 @@ from shuai.common import (
 from shuai.nlp.constants import (
     TEXT_FEATURES, FEATURIZER_TF_IDF, TOKENS, INTENT_FEATURES
 )
-from shuai.common.constants import BASE_DIR
 from ..featurizer import Featurizer
 
 
