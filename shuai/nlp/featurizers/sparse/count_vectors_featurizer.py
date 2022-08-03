@@ -6,7 +6,9 @@ from shuai.common import (
     Message, TrainingData, TrainerModelConfig,
     logger
 )
-from shuai.nlp.constants import TEXT_FEATURES, FEATURIZER_REGEX
+from shuai.nlp.constants import (
+    TEXT_FEATURES, FEATURIZER_REGEX, TOKENS
+)
 from ..featurizer import Featurizer
 
 
@@ -20,7 +22,7 @@ class CountVectorsFeaturizer(Featurizer):
     """
     name = FEATURIZER_REGEX
     provides = [TEXT_FEATURES]
-    requires = []
+    requires = [TOKENS]
     defaults = {
         "token_pattern": r'(?u)\b\w\w+\b',
         "strip_accents": None,
@@ -55,7 +57,8 @@ class CountVectorsFeaturizer(Featurizer):
         if message.get("spacy_doc"):
             return ' '.join([t.lemma_ for t in message.get("spacy_doc")])
         else:
-            return message.text
+            document = ' '.join([token.text for token in message.get(TOKENS)])
+            return document.strip()
 
     @classmethod
     def required_packages(cls) -> List[Text]:
