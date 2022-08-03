@@ -1,7 +1,9 @@
+from collections import Counter
+from importlib import import_module
 from typing import (
     Dict, Text, Any, List, Tuple
 )
-from collections import Counter
+
 
 import pandas as pd
 import numpy as np
@@ -11,10 +13,8 @@ from shuai.common import (
     logger
 )
 from shuai.nlp.constants import (
-    CLASSIFIER_BM25, INTENT, TOKENS,
-    TEXT_FEATURES, INTENT_FEATURES
+    CLASSIFIER_BM25, INTENT, TOKENS
 )
-from shuai.algorithm.cos import cos
 from .classifier import Classifier
 
 
@@ -66,17 +66,29 @@ class BM25IntentClassifier(Classifier):
             return feature_name[:self.max_features]
         return feature_name
 
-    def _construct_count_vector(self, word_matrix: List[Counter]) -> np.array:
+    def _construct_count_vectors(self, word_matrix: List[Counter]) -> np.array:
         tf = [
-            [
-                word_freq.get(word, 0) for word in self.top_keywords
-            ] for word_freq in word_matrix
+            self._extract_count_vector(word_freq) for word_freq in word_matrix
         ]
         return np.array(tf)
 
-    def _extract_feature_vector(self, tokens: List[Text]):
-        word_freq = Counter(tokens)
-        return np.array([word_freq.get(word, 0) for word in self.top_keywords])
+    def _extract_count_vector(self, word_freq: Counter):
+        return [word_freq.get(word, 0) for word in self.top_keywords]
+
+    def _transform_score2confidence(self,
+                                    intent: Dict[Text, Any],
+                                    tf: np.array,
+                                    query_tokens_freq_vector: np.array,
+                                    query_text: Text):
+        try:
+            module = import_module(f'shuai.algorithm.{self.algorithm}')
+        except ModuleNotFoundError:
+            return None
+
+        if self.algorithm == 'cos':
+            return module.core_method(tf[intent['index']], list(query_tokens_freq_vector))
+        elif self.algorithm == 'levenshtein':
+            return module.core_method(intent['text'], query_text)
 
     def calculate(self, document_cnt: int, tf: np.array) -> Tuple:
         dl = np.sum(tf > 0, axis=1)
@@ -104,7 +116,7 @@ class BM25IntentClassifier(Classifier):
         word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
         self.top_keywords = self._get_top_keywords(word_matrix)
 
-        tf = self._construct_count_vector(word_matrix)
+        tf = self._construct_count_vectors(word_matrix)
         document_cnt = len(clean_train_data)
         score, dl, avg_dl = self.calculate(document_cnt, tf)
         self.model = {
@@ -116,9 +128,8 @@ class BM25IntentClassifier(Classifier):
         }
 
     def process(self, message: Message, **kwargs):
-        # todo transform score to percent
         segment = Counter([token.text for token in message.get(TOKENS)])
-        intent = self.predict(segment)
+        intent = self.predict(segment, message.text)
         if intent:
             message.set(INTENT, {
                 'name': intent['data'].get('intent'),
@@ -126,11 +137,10 @@ class BM25IntentClassifier(Classifier):
                 'text': intent['text']
             }, add_to_output=True)
 
-    def predict(self, query_word_freq: Counter) -> List:
+    def predict(self, query_word_freq: Counter, query_text: Text) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
         score = self.model.get('SCORE')
-        tf = self.model.get('tf')
-        tokens_freq_vector = np.array([query_word_freq.get(i, 0) for i in self.top_keywords])
+        tokens_freq_vector = np.array(self._extract_count_vector(query_word_freq))
         repeated_tokens_freq_vector = np.tile(tokens_freq_vector, (document_cnt, 1))
         tokens_vec_index = np.where(tokens_freq_vector > 0, 1, 0)
         corr_ratios = np.sum(
@@ -148,7 +158,8 @@ class BM25IntentClassifier(Classifier):
         records.sort(key=lambda x: x['score'], reverse=True)
         if records:
             intent = records[0]
-            intent['confidence'] = cos(tf[intent['index']], list(tokens_freq_vector))
+            intent['confidence'] = self._transform_score2confidence(intent, self.model.get('tf'),
+                                                                    tokens_freq_vector, query_text)
         else:
             intent = None
         return intent
