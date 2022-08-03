@@ -1,5 +1,5 @@
 from typing import (
-    Dict, Text, Any, List, Tuple, SupportsFloat
+    Dict, Text, Any, List, Tuple
 )
 from collections import Counter
 
@@ -14,12 +14,14 @@ from shuai.nlp.constants import (
     CLASSIFIER_BM25, INTENT, TOKENS,
     TEXT_FEATURES, INTENT_FEATURES
 )
+from shuai.algorithm.cos import cos
 from .classifier import Classifier
 
 
 class BM25IntentClassifier(Classifier):
     """
     manual bm25 need to convert to sklearn
+    algorithm: cos, levenshtein
     """
     name = CLASSIFIER_BM25
     provides = [INTENT]
@@ -29,7 +31,8 @@ class BM25IntentClassifier(Classifier):
         'k1': 2,
         'k2': 1,
         'b': 0.75,
-        'ignore_case': True
+        'ignore_case': True,
+        'algorithm': 'cos'
     }
 
     def __init__(self, component_config: Dict[Text, Any] = None, **kwargs):
@@ -38,6 +41,7 @@ class BM25IntentClassifier(Classifier):
         self.k1 = self.component_config.get('k1', 2)
         self.k2 = self.component_config.get('top_k', 1)
         self.b = self.component_config.get('b', 0.75)
+        self.algorithm = self.component_config.get('algorithm', 'cos')
         self.ignore_case = bool(self.component_config.get('ignore_case', True))
         self.max_features = kwargs.get('max_features', None)
         self.top_keywords = None
@@ -69,6 +73,10 @@ class BM25IntentClassifier(Classifier):
             ] for word_freq in word_matrix
         ]
         return np.array(tf)
+
+    def _extract_feature_vector(self, tokens: List[Text]):
+        word_freq = Counter(tokens)
+        return np.array([word_freq.get(word, 0) for word in self.top_keywords])
 
     def calculate(self, document_cnt: int, tf: np.array) -> Tuple:
         dl = np.sum(tf > 0, axis=1)
@@ -103,24 +111,25 @@ class BM25IntentClassifier(Classifier):
             'SCORE': score,
             'top_keywords': self.top_keywords,
             'data': clean_train_data,
+            'tf': tf,
             'args': {'document_len': dl, 'avg_document_len': avg_dl, 'document_cnt': document_cnt}
         }
 
     def process(self, message: Message, **kwargs):
         # todo transform score to percent
         segment = Counter([token.text for token in message.get(TOKENS)])
-        results = self.predict(segment)
-        if results:
-            intent = results[0]
+        intent = self.predict(segment)
+        if intent:
             message.set(INTENT, {
-                'name': intent['data']['intent'],
-                'confidence': intent['score'],
+                'name': intent['data'].get('intent'),
+                'confidence': intent['confidence'],
                 'text': intent['text']
             }, add_to_output=True)
 
     def predict(self, query_word_freq: Counter) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
         score = self.model.get('SCORE')
+        tf = self.model.get('tf')
         tokens_freq_vector = np.array([query_word_freq.get(i, 0) for i in self.top_keywords])
         repeated_tokens_freq_vector = np.tile(tokens_freq_vector, (document_cnt, 1))
         tokens_vec_index = np.where(tokens_freq_vector > 0, 1, 0)
@@ -137,4 +146,9 @@ class BM25IntentClassifier(Classifier):
         corr_records["score"] = corr_ratios[corr_records_index]
         records = corr_records.to_dict('records')
         records.sort(key=lambda x: x['score'], reverse=True)
-        return records
+        if records:
+            intent = records[0]
+            intent['confidence'] = cos(tf[intent['index']], list(tokens_freq_vector))
+        else:
+            intent = None
+        return intent
