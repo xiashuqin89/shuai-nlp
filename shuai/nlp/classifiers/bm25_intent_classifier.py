@@ -13,7 +13,7 @@ from shuai.common import (
     logger
 )
 from shuai.nlp.constants import (
-    CLASSIFIER_BM25, INTENT, TOKENS
+    CLASSIFIER_BM25, INTENT, TOKENS, TEXT_FEATURES
 )
 from .classifier import Classifier
 
@@ -25,7 +25,7 @@ class BM25IntentClassifier(Classifier):
     """
     name = CLASSIFIER_BM25
     provides = [INTENT]
-    requires = [TOKENS]
+    requires = [TOKENS, TEXT_FEATURES]
     defaults = {
         'top_k': 1,
         'k1': 2,
@@ -112,11 +112,13 @@ class BM25IntentClassifier(Classifier):
         # clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
         logger.info(f'removed duplication size={clean_train_data}')
 
-        tokens_corpus: List[List[object]] = [eg.get(TOKENS) for eg in training_data.intent_examples]
-        word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
-        self.top_keywords = self._get_top_keywords(word_matrix)
+        # tokens_corpus: List[List[object]] = [eg.get(TOKENS) for eg in training_data.intent_examples]
+        # word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
+        # self.top_keywords = self._get_top_keywords(word_matrix)
+        # tf = self._construct_count_vectors(word_matrix)
 
-        tf = self._construct_count_vectors(word_matrix)
+        tf = np.array([eg.get(TEXT_FEATURES) for eg in training_data.intent_examples])
+
         document_cnt = len(clean_train_data)
         score, dl, avg_dl = self.calculate(document_cnt, tf)
         self.model = {
@@ -128,7 +130,8 @@ class BM25IntentClassifier(Classifier):
         }
 
     def process(self, message: Message, **kwargs):
-        segment = Counter([token.text for token in message.get(TOKENS)])
+        # segment = Counter([token.text for token in message.get(TOKENS)])
+        segment = message.get(TEXT_FEATURES)
         intent = self.predict(segment, message.text)
         if intent:
             message.set(INTENT, {
@@ -140,7 +143,8 @@ class BM25IntentClassifier(Classifier):
     def predict(self, query_word_freq: Counter, query_text: Text) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
         score = self.model.get('SCORE')
-        tokens_freq_vector = np.array(self._extract_count_vector(query_word_freq))
+        # tokens_freq_vector = np.array(self._extract_count_vector(query_word_freq))
+        tokens_freq_vector = query_word_freq
         repeated_tokens_freq_vector = np.tile(tokens_freq_vector, (document_cnt, 1))
         tokens_vec_index = np.where(tokens_freq_vector > 0, 1, 0)
         corr_ratios = np.sum(
