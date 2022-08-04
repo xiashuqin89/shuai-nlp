@@ -7,7 +7,7 @@ from shuai.common import (
     logger
 )
 from shuai.nlp.constants import (
-    TEXT_FEATURES, FEATURIZER_REGEX, TOKENS
+    TEXT_FEATURES, FEATURIZER_COUNT_VECTORS, TOKENS
 )
 from ..featurizer import Featurizer
 
@@ -20,7 +20,7 @@ class CountVectorsFeaturizer(Featurizer):
     but not ab12d) will be represented by a single feature.
     Not adjust to chinese text, need to add tokenizer
     """
-    name = FEATURIZER_REGEX
+    name = FEATURIZER_COUNT_VECTORS
     provides = [TEXT_FEATURES]
     requires = [TOKENS]
     defaults = {
