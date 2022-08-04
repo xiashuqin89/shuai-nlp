@@ -47,34 +47,6 @@ class BM25IntentClassifier(Classifier):
         self.top_keywords = None
         self.model = None
 
-    def _get_top_keywords(self, word_matrix: List[Counter]) -> List[Text]:
-        """
-        :return top frequency words list
-        todo need move to sparse featurizer
-        """
-        merge_tf = {}
-        for _doc_tf in word_matrix:
-            for k, v in _doc_tf.items():
-                if k not in merge_tf:
-                    merge_tf[k] = v
-                else:
-                    merge_tf[k] += v
-        feature_name = sorted(merge_tf, key=merge_tf.__getitem__, reverse=True)
-        logger.info("feature_name", feature_name)
-        logger.info("merge_TF", merge_tf)
-        if self.max_features:
-            return feature_name[:self.max_features]
-        return feature_name
-
-    def _construct_count_vectors(self, word_matrix: List[Counter]) -> np.array:
-        tf = [
-            self._extract_count_vector(word_freq) for word_freq in word_matrix
-        ]
-        return np.array(tf)
-
-    def _extract_count_vector(self, word_freq: Counter):
-        return [word_freq.get(word, 0) for word in self.top_keywords]
-
     def _transform_score2confidence(self,
                                     intent: Dict[Text, Any],
                                     tf: np.array,
@@ -86,7 +58,7 @@ class BM25IntentClassifier(Classifier):
             return None
 
         if self.algorithm == 'cos':
-            return module.core_method(tf[intent['index']], list(query_tokens_freq_vector))
+            return module.core_method(query_tokens_freq_vector, tf[intent['index']])
         elif self.algorithm == 'levenshtein':
             return module.core_method(intent['text'], query_text)
 
@@ -111,12 +83,6 @@ class BM25IntentClassifier(Classifier):
         logger.info(f'read train conf, size={clean_train_data}')
         # clean_train_data = clean_train_data.drop_duplicates(keep='first').reset_index(drop=True)
         logger.info(f'removed duplication size={clean_train_data}')
-
-        # tokens_corpus: List[List[object]] = [eg.get(TOKENS) for eg in training_data.intent_examples]
-        # word_matrix = [Counter([token.text for token in tokens]) for tokens in tokens_corpus]
-        # self.top_keywords = self._get_top_keywords(word_matrix)
-        # tf = self._construct_count_vectors(word_matrix)
-
         tf = np.array([eg.get(TEXT_FEATURES) for eg in training_data.intent_examples])
 
         document_cnt = len(clean_train_data)
@@ -130,7 +96,6 @@ class BM25IntentClassifier(Classifier):
         }
 
     def process(self, message: Message, **kwargs):
-        # segment = Counter([token.text for token in message.get(TOKENS)])
         segment = message.get(TEXT_FEATURES)
         intent = self.predict(segment, message.text)
         if intent:
@@ -140,13 +105,11 @@ class BM25IntentClassifier(Classifier):
                 'text': intent['text']
             }, add_to_output=True)
 
-    def predict(self, query_word_freq: Counter, query_text: Text) -> List:
+    def predict(self, X: List[List], query_text: Text) -> List:
         document_cnt = self.model.get('args').get('document_cnt')
         score = self.model.get('SCORE')
-        # tokens_freq_vector = np.array(self._extract_count_vector(query_word_freq))
-        tokens_freq_vector = query_word_freq
-        repeated_tokens_freq_vector = np.tile(tokens_freq_vector, (document_cnt, 1))
-        tokens_vec_index = np.where(tokens_freq_vector > 0, 1, 0)
+        repeated_tokens_freq_vector = np.tile(X, (document_cnt, 1))
+        tokens_vec_index = np.where(X > 0, 1, 0)
         corr_ratios = np.sum(
             np.tile(
                 tokens_vec_index, (document_cnt, 1)
@@ -163,7 +126,7 @@ class BM25IntentClassifier(Classifier):
         if records:
             intent = records[0]
             intent['confidence'] = self._transform_score2confidence(intent, self.model.get('tf'),
-                                                                    tokens_freq_vector, query_text)
+                                                                    X, query_text)
         else:
             intent = None
         return intent
