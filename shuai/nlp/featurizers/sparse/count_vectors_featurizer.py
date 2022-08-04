@@ -84,7 +84,7 @@ class CountVectorsFeaturizer(Featurizer):
         lem_exs = [self._lemmatize(example)
                    for example in training_data.intent_examples]
         # matrix for example input text
-        # [0, 1, 1, 1, 0, 0, 1, 0, 1],
+        # [[0, 1, 1, 1, 0, 0, 1, 0, 1],
         # [0, 2, 0, 1, 0, 1, 1, 0, 1],
         # [1, 0, 0, 1, 1, 0, 1, 1, 1],
         # [0, 1, 1, 1, 0, 0, 1, 0, 1]]
