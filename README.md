@@ -1,2 +1,2 @@
 # shuai-nlp
-a simple nlp engine
+a simple nlp engine embracing the llm
